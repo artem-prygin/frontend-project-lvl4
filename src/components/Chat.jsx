@@ -10,7 +10,7 @@ const Chat = () => {
       {messages.map(({ username, body, id }) => (
         <div className="text-break" key={id}>
           <b>{username}</b>
-          :
+          :&nbsp;
           {body}
         </div>
       ))}
