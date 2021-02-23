@@ -29,5 +29,3 @@ publish:
 
 deploy:
 	git push heroku
-
-.PHONY: test
