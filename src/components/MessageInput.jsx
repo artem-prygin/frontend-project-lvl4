@@ -47,8 +47,21 @@ const MessageInput = () => {
             <Form>
               <div className="form-group">
                 <div className="input-group">
-                  <Field type="text" name="message" aria-label="body" className={inputClassList} innerRef={messageInput} />
-                  <Button variant="primary" type="submit" disabled={isSubmitting || errors.message}>Submit</Button>
+                  <Field
+                    type="text"
+                    name="message"
+                    aria-label="body"
+                    autoComplete="off"
+                    className={inputClassList}
+                    innerRef={messageInput}
+                  />
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    disabled={isSubmitting || errors.message}
+                  >
+                    Submit
+                  </Button>
                   <div className="d-block invalid-feedback">{errors.message}</div>
                 </div>
               </div>

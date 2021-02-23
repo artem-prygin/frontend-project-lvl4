@@ -8,12 +8,14 @@ import { Field, Form, Formik } from 'formik';
 import routes from '../routes';
 import { closeModal, modalSelector } from '../slices/modalSlice';
 import { channelsSelector } from '../slices/channelsSlice';
+import {
+  NAME_MIN_LENGTH as MIN,
+  NAME_MAX_LENGTH as MAX,
+  MODAL_ADD,
+  MODAL_RENAME,
+} from '../slices/constants';
 
-const NAME_MIN_LENGTH = 3;
-const NAME_MAX_LENGTH = 30;
-const MODAL_ADD = 'add';
-const MODAL_RENAME = 'rename';
-const modalTypes = [MODAL_ADD, MODAL_RENAME];
+const componentModalTypes = [MODAL_ADD, MODAL_RENAME];
 
 const ModalAddRenameChannel = () => {
   const dispatch = useDispatch();
@@ -49,7 +51,7 @@ const ModalAddRenameChannel = () => {
     }
   });
 
-  const isModalActive = modalTypes.includes(modalType);
+  const isModalActive = componentModalTypes.includes(modalType);
 
   const handleModalClose = () => {
     dispatch(closeModal());
@@ -69,11 +71,9 @@ const ModalAddRenameChannel = () => {
             const channelName = values.channelName.trim();
             if (channelName.length === 0) {
               errors.channelName = 'This field is required';
-            }
-            if (channelName.length < NAME_MIN_LENGTH || channelName.length > NAME_MAX_LENGTH) {
-              errors.channelName = `Name should be between ${NAME_MIN_LENGTH} and ${NAME_MAX_LENGTH} symbols`;
-            }
-            if (allChannels.includes(channelName)) {
+            } else if (channelName.length < MIN || channelName.length > MAX) {
+              errors.channelName = `Name should be between ${MIN} and ${MAX} symbols`;
+            } else if (allChannels.includes(channelName)) {
               errors.channelName = 'This name is already taken';
             }
             return errors;
@@ -102,12 +102,31 @@ const ModalAddRenameChannel = () => {
               <Form>
                 <div className="form-group">
                   <div className="input-group mb-2">
-                    <Field type="text" name="channelName" aria-label="body" className={inputClassList} innerRef={channelInput} />
+                    <Field
+                      type="text"
+                      name="channelName"
+                      aria-label="body"
+                      autoComplete="off"
+                      className={inputClassList}
+                      innerRef={channelInput}
+                    />
                     <div className="d-block invalid-feedback">{errors.channelName}</div>
                   </div>
                   <div className="d-flex justify-content-end">
-                    <Button variant="secondary" className="mr-2" onClick={handleModalClose}>Cancel</Button>
-                    <Button variant="primary" type="submit" disabled={isSubmitting || errors.channelName}>Submit</Button>
+                    <Button
+                      variant="secondary"
+                      className="mr-2"
+                      onClick={handleModalClose}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      variant="primary"
+                      type="submit"
+                      disabled={isSubmitting || errors.channelName}
+                    >
+                      Submit
+                    </Button>
                   </div>
                 </div>
               </Form>

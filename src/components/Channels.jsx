@@ -6,6 +6,7 @@ import { currentChannelIdSelector, setCurrentChannelId } from '../slices/current
 import { openModal } from '../slices/modalSlice';
 import ModalAddRenameChannel from './ModalAddRenameChannel';
 import ModalRemoveChannel from './ModalRemoveChannel';
+import { MODAL_ADD, MODAL_REMOVE, MODAL_RENAME } from '../slices/constants';
 
 const Channels = () => {
   const channels = useSelector(channelsSelector);
@@ -49,14 +50,14 @@ const Channels = () => {
         <Dropdown.Toggle className="flex-grow-0" variant={getBtnVariant(id)} />
         <Dropdown.Menu>
           <Dropdown.Item
-            data-modal-type="rename"
+            data-modal-type={MODAL_RENAME}
             data-channel-id={id}
             onClick={handleOpenModal}
           >
             Rename
           </Dropdown.Item>
           <Dropdown.Item
-            data-modal-type="remove"
+            data-modal-type={MODAL_REMOVE}
             data-channel-id={id}
             onClick={handleOpenModal}
           >
@@ -71,14 +72,14 @@ const Channels = () => {
     <div className="col-3 border-right overflow-auto h-100">
       <div className="d-flex mb-2">
         <span>Channels</span>
-        <button
-          type="button"
-          className="ml-auto p-0 btn btn-link"
-          data-modal-type="add"
+        <Button
+          variant="link"
+          className="ml-auto p-0"
+          data-modal-type={MODAL_ADD}
           onClick={handleOpenModal}
         >
           +
-        </button>
+        </Button>
       </div>
       <ul className="nav flex-column nav-pills nav-fill">
         {channels.map((channel) => {

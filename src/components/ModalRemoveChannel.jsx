@@ -4,11 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { closeModal, modalSelector } from '../slices/modalSlice';
 import routes from '../routes';
+import { MODAL_REMOVE } from '../slices/constants';
 
 const ModalRemoveChannel = () => {
   const dispatch = useDispatch();
   const { modalType, data } = useSelector(modalSelector);
-  const isRemoveModalActive = (modalType === 'remove');
+  const isRemoveModalActive = (modalType === MODAL_REMOVE);
   const channelId = +data?.channelId;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [removingError, setRemovingError] = useState(false);
@@ -46,8 +47,20 @@ const ModalRemoveChannel = () => {
       </Modal.Body>
 
       <Modal.Footer>
-        <Button variant="secondary" className="mr-2" onClick={handleModalClose}>Cancel</Button>
-        <Button variant="danger" disabled={isSubmitting} onClick={handleChannelRemove}>Submit</Button>
+        <Button
+          variant="secondary"
+          className="mr-2"
+          onClick={handleModalClose}
+        >
+          Cancel
+        </Button>
+        <Button
+          variant="danger"
+          disabled={isSubmitting}
+          onClick={handleChannelRemove}
+        >
+          Submit
+        </Button>
       </Modal.Footer>
     </Modal>
   );
