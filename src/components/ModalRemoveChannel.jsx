@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import {closeModal, modalSelector} from '../slices/modalSlice';
 import axios from 'axios';
+import { closeModal, modalSelector } from '../slices/modalSlice';
 import routes from '../routes';
 
 const ModalRemoveChannel = () => {
@@ -31,7 +31,7 @@ const ModalRemoveChannel = () => {
       setRemovingError(true);
       setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <Modal show={isRemoveModalActive} onHide={handleModalClose}>

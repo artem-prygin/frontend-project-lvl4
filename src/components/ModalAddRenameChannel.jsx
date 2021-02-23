@@ -1,12 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { closeModal, modalSelector } from '../slices/modalSlice';
 import DOMPurify from 'dompurify';
 import axios from 'axios';
-import routes from '../routes';
 import cn from 'classnames';
 import { Field, Form, Formik } from 'formik';
+import routes from '../routes';
+import { closeModal, modalSelector } from '../slices/modalSlice';
 import { channelsSelector } from '../slices/channelsSlice';
 
 const NAME_MIN_LENGTH = 3;
@@ -29,14 +29,18 @@ const ModalAddRenameChannel = () => {
   const modalMapping = {
     [MODAL_ADD]: {
       title: 'Add channel',
-      query: async (name) => await axios
-        .post(routes.channelsPath(), { data: { attributes: { name } } }),
+      query: async (name) => {
+        await axios
+          .post(routes.channelsPath(), { data: { attributes: { name } } });
+      },
     },
     [MODAL_RENAME]: {
       title: 'Rename channel',
-      query: async (name) => await axios
-        .patch(routes.channelPath(currentChannelId), { data: { attributes: { name } } }),
-    }
+      query: async (name) => {
+        await axios
+          .patch(routes.channelPath(currentChannelId), { data: { attributes: { name } } });
+      },
+    },
   };
 
   useEffect(() => {
@@ -59,8 +63,8 @@ const ModalAddRenameChannel = () => {
 
       <Modal.Body>
         <Formik
-          initialValues={{channelName: currentChannelName}}
-          validate={values => {
+          initialValues={{ channelName: currentChannelName }}
+          validate={(values) => {
             const errors = {};
             const channelName = values.channelName.trim();
             if (channelName.length === 0) {
@@ -90,14 +94,15 @@ const ModalAddRenameChannel = () => {
               channelInput.current.focus();
               setSubmitting(false);
             }
-          }}>
-          {({isSubmitting, errors}) => {
-            const inputClassList = cn('form-control', {'is-invalid': errors.channelName});
+          }}
+        >
+          {({ isSubmitting, errors }) => {
+            const inputClassList = cn('form-control', { 'is-invalid': errors.channelName });
             return (
               <Form>
                 <div className="form-group">
                   <div className="input-group mb-2">
-                    <Field type="text" name="channelName" aria-label="body" className={inputClassList} innerRef={channelInput}/>
+                    <Field type="text" name="channelName" aria-label="body" className={inputClassList} innerRef={channelInput} />
                     <div className="d-block invalid-feedback">{errors.channelName}</div>
                   </div>
                   <div className="d-flex justify-content-end">
@@ -106,7 +111,8 @@ const ModalAddRenameChannel = () => {
                   </div>
                 </div>
               </Form>
-            )}}
+            );
+          }}
         </Formik>
       </Modal.Body>
     </Modal>

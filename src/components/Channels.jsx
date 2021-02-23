@@ -1,8 +1,8 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { Button, ButtonGroup, Dropdown } from 'react-bootstrap';
 import { channelsSelector } from '../slices/channelsSlice';
 import { currentChannelIdSelector, setCurrentChannelId } from '../slices/currentChannelIdSlice';
-import { useSelector, useDispatch } from 'react-redux';
-import { Button, ButtonGroup, Dropdown } from "react-bootstrap";
 import { openModal } from '../slices/modalSlice';
 import ModalAddRenameChannel from './ModalAddRenameChannel';
 import ModalRemoveChannel from './ModalRemoveChannel';
@@ -19,19 +19,20 @@ const Channels = () => {
   const handleOpenModal = (e) => {
     const { modalType, channelId } = e.target?.dataset;
     dispatch(openModal({ modalType, data: { channelId } }));
-  }
+  };
 
-  const getBtnVariant = (id) => id === currentChannelId ? 'primary' : 'light';
+  const getBtnVariant = (id) => (id === currentChannelId ? 'primary' : 'light');
   const btnClassList = 'nav-link btn-block flex-grow-1 text-left';
 
   const renderDefaultChannel = ({ id, name }) => (
     <li className="nav-item mb-2" key={id}>
-        <Button
-          variant={getBtnVariant(id)}
-          className={btnClassList}
-          onClick={handleSetCurrentChannelId(id)}>
-          {name}
-        </Button>
+      <Button
+        variant={getBtnVariant(id)}
+        className={btnClassList}
+        onClick={handleSetCurrentChannelId(id)}
+      >
+        {name}
+      </Button>
     </li>
   );
 
@@ -41,7 +42,8 @@ const Channels = () => {
         <Button
           variant={getBtnVariant(id)}
           className={btnClassList}
-          onClick={handleSetCurrentChannelId(id)}>
+          onClick={handleSetCurrentChannelId(id)}
+        >
           {name}
         </Button>
         <Dropdown.Toggle className="flex-grow-0" variant={getBtnVariant(id)} />
@@ -49,13 +51,15 @@ const Channels = () => {
           <Dropdown.Item
             data-modal-type="rename"
             data-channel-id={id}
-            onClick={handleOpenModal}>
+            onClick={handleOpenModal}
+          >
             Rename
           </Dropdown.Item>
           <Dropdown.Item
             data-modal-type="remove"
             data-channel-id={id}
-            onClick={handleOpenModal}>
+            onClick={handleOpenModal}
+          >
             Remove
           </Dropdown.Item>
         </Dropdown.Menu>
@@ -71,7 +75,8 @@ const Channels = () => {
           type="button"
           className="ml-auto p-0 btn btn-link"
           data-modal-type="add"
-          onClick={handleOpenModal}>
+          onClick={handleOpenModal}
+        >
           +
         </button>
       </div>

@@ -1,15 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { configureStore } from '@reduxjs/toolkit'
-import { Provider } from 'react-redux'
-import io from '../node_modules/socket.io/client-dist/socket.io.js';
+import { configureStore } from '@reduxjs/toolkit';
+import { Provider } from 'react-redux';
+import io from 'socket.io-client';
 import faker from 'faker';
 import cookies from 'js-cookie';
-import reducer from './slices'
+import reducer from './slices';
 import App from './components/App';
-import Context from "./Context";
-import { addMessage } from "./slices/messagesSlice";
-import { addChannel, removeChannel, renameChannel } from "./slices/channelsSlice";
+import Context from './Context';
+import { addMessage } from './slices/messagesSlice';
+import { addChannel, removeChannel, renameChannel } from './slices/channelsSlice';
 
 export default (gon) => {
   if (!cookies.get('username')) {
@@ -23,8 +23,8 @@ export default (gon) => {
   const socket = io();
   socket
     .on('newMessage', (data) => {
-    const { data: { attributes: newMessage } } = data;
-    store.dispatch(addMessage(newMessage));
+      const { data: { attributes: newMessage } } = data;
+      store.dispatch(addMessage(newMessage));
     })
     .on('newChannel', (data) => {
       const { data: { attributes: newChannel } } = data;
@@ -47,4 +47,4 @@ export default (gon) => {
     </Provider>,
     document.getElementById('chat'),
   );
-}
+};
