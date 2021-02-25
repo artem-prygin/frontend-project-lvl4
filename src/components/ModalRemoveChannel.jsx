@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { closeModal, modalSelector } from '../slices/modalSlice';
 import routes from '../routes';
-import { MODAL_REMOVE } from '../slices/constants';
+import { MODAL_REMOVE } from '../constants';
 
 const ModalRemoveChannel = () => {
   const dispatch = useDispatch();

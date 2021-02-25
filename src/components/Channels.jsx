@@ -6,7 +6,7 @@ import { currentChannelIdSelector, setCurrentChannelId } from '../slices/current
 import { openModal } from '../slices/modalSlice';
 import ModalAddRenameChannel from './ModalAddRenameChannel';
 import ModalRemoveChannel from './ModalRemoveChannel';
-import { MODAL_ADD, MODAL_REMOVE, MODAL_RENAME } from '../slices/constants';
+import { MODAL_ADD, MODAL_REMOVE, MODAL_RENAME } from '../constants';
 
 const Channels = () => {
   const channels = useSelector(channelsSelector);

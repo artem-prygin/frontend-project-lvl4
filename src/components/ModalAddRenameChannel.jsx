@@ -13,7 +13,7 @@ import {
   NAME_MAX_LENGTH as MAX,
   MODAL_ADD,
   MODAL_RENAME,
-} from '../slices/constants';
+} from '../constants';
 
 const componentModalTypes = [MODAL_ADD, MODAL_RENAME];
 
