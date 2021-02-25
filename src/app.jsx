@@ -13,7 +13,9 @@ import { addChannel, removeChannel, renameChannel } from './slices/channelsSlice
 
 export default (gon) => {
   if (!cookies.get('username')) {
-    cookies.set('username', faker.name.findName());
+    // eslint-disable-next-line no-alert
+    const usernamePrompt = prompt('Please, type your name');
+    cookies.set('username', usernamePrompt);
   }
   const username = cookies.get('username');
 
