@@ -21,7 +21,7 @@
   },
   "author": "Artem Prygin <aprygin@mail.ru>",
   "license": "ISC",
-  "homepage": "",
+  "homepage": "https://artem-prygin-slack.herokuapp.com/",
   "dependencies": {
     "@babel/cli": "^7.12.8",
     "@babel/core": "^7.12.9",
