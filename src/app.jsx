@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import io from 'socket.io-client';
+import faker from 'faker';
 import cookies from 'js-cookie';
 import reducer from './slices';
 import App from './components/App';
@@ -12,9 +13,7 @@ import { addChannel, removeChannel, renameChannel } from './slices/channelsSlice
 
 export default (gon) => {
   if (!cookies.get('username')) {
-    // eslint-disable-next-line no-alert
-    const usernamePrompt = prompt('Please, type your name');
-    cookies.set('username', usernamePrompt);
+    cookies.set('username', faker.name.findName());
   }
   const username = cookies.get('username');
 
