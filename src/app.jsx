@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import io from 'socket.io-client';
-import faker from 'faker';
 import cookies from 'js-cookie';
 import reducer from './slices';
 import App from './components/App';
