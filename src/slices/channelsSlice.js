@@ -1,24 +1,43 @@
+/* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
+import _ from 'lodash';
 
 export const channelsSlice = createSlice({
-  name: 'channels',
-  initialState: null,
+  name: 'channelsData',
+  initialState: { channels: [], currentChannelId: null },
   reducers: {
     addChannel: (state, action) => {
-      state.push(action.payload);
+      const newChannel = action.payload;
+      const newChannelId = newChannel.id;
+      state.channels.push(action.payload);
+      state.currentChannelId = newChannelId;
     },
     removeChannel: (state, action) => {
       const channelId = action.payload;
-      return state.filter((channel) => channel.id !== channelId);
+      _.remove(state.channels, (channel) => channel.id === channelId);
+      if (channelId === state.currentChannelId) {
+        const defaultChannelId = _.first(state.channels)?.id;
+        state.currentChannelId = defaultChannelId;
+      }
     },
     renameChannel: (state, action) => {
       const { id, name } = action.payload;
-      const channelToRemove = state.find((channel) => channel.id === id);
-      channelToRemove.name = name;
+      const channelToRename = state.channels.find((channel) => channel.id === id);
+      channelToRename.name = name;
+    },
+    setCurrentChannelId: (state, action) => {
+      const channelId = action.payload;
+      state.currentChannelId = channelId;
     },
   },
 });
 
-export const { addChannel, removeChannel, renameChannel } = channelsSlice.actions;
-export const channelsSelector = (state) => state.channels;
+export const {
+  addChannel,
+  removeChannel,
+  renameChannel,
+  setCurrentChannelId,
+} = channelsSlice.actions;
+export const channelsSelector = (state) => state.channelsData.channels;
+export const currentChannelIdSelector = (state) => state.channelsData.currentChannelId;
 export default channelsSlice.reducer;

@@ -5,12 +5,12 @@ import axios from 'axios';
 import DOMPurify from 'dompurify';
 import { Formik, Form, Field } from 'formik';
 import cn from 'classnames';
-import { currentChannelIdSelector } from '../slices/currentChannelIdSlice';
+import { currentChannelIdSelector } from '../slices/channelsSlice';
 import Context from '../Context';
 import routes from '../routes';
 
 const MessageInput = () => {
-  const username = useContext(Context);
+  const { username } = useContext(Context);
   const currentChannelId = useSelector(currentChannelIdSelector);
   const messageInput = useRef(null);
 

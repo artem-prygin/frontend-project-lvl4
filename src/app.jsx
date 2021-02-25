@@ -1,8 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
-import io from 'socket.io-client';
 import faker from 'faker';
 import cookies from 'js-cookie';
 import reducer from './slices';
@@ -11,16 +9,21 @@ import Context from './Context';
 import { addMessage } from './slices/messagesSlice';
 import { addChannel, removeChannel, renameChannel } from './slices/channelsSlice';
 
-export default (gon) => {
+export default (gon, socket) => {
   if (!cookies.get('username')) {
     cookies.set('username', faker.name.findName());
   }
   const username = cookies.get('username');
 
-  const preloadedState = JSON.parse(JSON.stringify(gon));
+  const preloadedState = {
+    channelsData: {
+      channels: gon.channels,
+      currentChannelId: gon.currentChannelId,
+    },
+    messages: gon.messages,
+  };
   const store = configureStore({ reducer, preloadedState });
 
-  const socket = io();
   socket
     .on('newMessage', (data) => {
       const { data: { attributes: newMessage } } = data;
@@ -39,12 +42,11 @@ export default (gon) => {
       store.dispatch(renameChannel(renamedChannel));
     });
 
-  ReactDOM.render(
+  return (
     <Provider store={store}>
-      <Context.Provider value={username}>
+      <Context.Provider value={{ username }}>
         <App />
       </Context.Provider>
-    </Provider>,
-    document.getElementById('chat'),
+    </Provider>
   );
 };

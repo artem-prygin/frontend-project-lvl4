@@ -1,8 +1,7 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, ButtonGroup, Dropdown } from 'react-bootstrap';
-import { channelsSelector } from '../slices/channelsSlice';
-import { currentChannelIdSelector, setCurrentChannelId } from '../slices/currentChannelIdSlice';
+import { channelsSelector, currentChannelIdSelector, setCurrentChannelId } from '../slices/channelsSlice';
 import { openModal } from '../slices/modalSlice';
 import ModalAddRenameChannel from './ModalAddRenameChannel';
 import ModalRemoveChannel from './ModalRemoveChannel';

@@ -1,24 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
+import _ from 'lodash';
 import { removeChannel } from './channelsSlice';
 
 export const messagesSlice = createSlice({
   name: 'messages',
-  initialState: null,
+  initialState: [],
   reducers: {
     addMessage: (state, action) => {
-      state.push(action.payload);
+      const newMessage = action.payload;
+      state.push(newMessage);
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(removeChannel, (state, action) => {
         const channelId = action.payload;
-        return state.filter((message) => message.channelId !== channelId);
+        _.remove(state, (message) => message.channelId === channelId);
       });
   },
 });
 
 export const { addMessage } = messagesSlice.actions;
 export const messagesSelector = (state) => state.messages
-  .filter((msg) => msg.channelId === state.currentChannelId);
+  .filter((msg) => msg.channelId === state.channelsData.currentChannelId);
 export default messagesSlice.reducer;
