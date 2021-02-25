@@ -2,6 +2,7 @@
 Create your own channels and simply chat with your friends!
 * * *
 [![Github Actions Status](https://github.com/hexlet-components/projects-frontend-l4-server/workflows/Node%20CI/badge.svg)](https://github.com/hexlet-components/projects-frontend-l4-server/actions)
+[![Actions Status](https://github.com/artem-prygin/frontend-project-lvl4/workflows/hexlet-check/badge.svg)](https://github.com/artem-prygin/frontend-project-lvl4/actions)
 [![Linter for Google Actions](https://github.com/artem-prygin/frontend-project-lvl4/workflows/Linter%20Github%20Actions/badge.svg)](https://github.com/artem-prygin/frontend-project-lvl4/actions?query=workflow%3A%22Linter+Github+Actions%22)
 [![Maintainability](https://api.codeclimate.com/v1/badges/7dacb2ee2f730bad71a2/maintainability)](https://codeclimate.com/github/artem-prygin/frontend-project-lvl4/maintainability)
 * * *

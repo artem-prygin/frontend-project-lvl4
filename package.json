@@ -1,7 +1,7 @@
 {
   "name": "@hexlet/code",
   "version": "0.0.1",
-  "description": "",
+  "description": "slack lite analog for simple chatting",
   "main": "./src/app.jsx",
   "engines": {
     "node": ">= 14"
