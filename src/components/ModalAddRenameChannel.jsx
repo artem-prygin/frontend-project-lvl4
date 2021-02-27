@@ -3,6 +3,7 @@ import { Button, Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import DOMPurify from 'dompurify';
 import axios from 'axios';
+import * as yup from 'yup';
 import cn from 'classnames';
 import { Field, Form, Formik } from 'formik';
 import routes from '../routes';
@@ -12,7 +13,7 @@ import {
   NAME_MIN_LENGTH as MIN,
   NAME_MAX_LENGTH as MAX,
   MODAL_ADD,
-  MODAL_RENAME,
+  MODAL_RENAME, NETWORK_ERROR,
 } from '../constants';
 
 const componentModalTypes = [MODAL_ADD, MODAL_RENAME];
@@ -57,6 +58,14 @@ const ModalAddRenameChannel = () => {
     dispatch(closeModal());
   };
 
+  const validationSchema = yup.object().shape({
+    channelName: yup.string()
+      .required('This field is required')
+      .min(`${MIN}`, `Name should be between ${MIN} and ${MAX} symbols`)
+      .max(`${MAX}`, `Name should be between ${MIN} and ${MAX} symbols`)
+      .notOneOf(allChannels, 'This name is already taken'),
+  });
+
   return (
     <Modal show={isModalActive} onHide={handleModalClose}>
       <Modal.Header closeButton>
@@ -66,21 +75,14 @@ const ModalAddRenameChannel = () => {
       <Modal.Body>
         <Formik
           initialValues={{ channelName: currentChannelName }}
-          validate={(values) => {
-            const errors = {};
-            const channelName = values.channelName.trim();
-            if (channelName.length === 0) {
-              errors.channelName = 'This field is required';
-            } else if (channelName.length < MIN || channelName.length > MAX) {
-              errors.channelName = `Name should be between ${MIN} and ${MAX} symbols`;
-            } else if (allChannels.includes(channelName)) {
-              errors.channelName = 'This name is already taken';
-            }
-            return errors;
-          }}
+          validationSchema={validationSchema}
+          validateOnMount
           onSubmit={async (values, { setSubmitting, setFieldError }) => {
             const { channelName } = values;
-            const name = DOMPurify.sanitize(channelName);
+            const name = DOMPurify
+              .sanitize(channelName)
+              .trim()
+              .replace(/\s+/g, ' ');
             if (modalType === MODAL_RENAME && channelName === currentChannelName) {
               dispatch(closeModal());
               return;
@@ -90,14 +92,19 @@ const ModalAddRenameChannel = () => {
               setSubmitting(false);
               dispatch(closeModal());
             } catch (e) {
-              setFieldError('channelName', 'Network error');
+              setFieldError('channelName', NETWORK_ERROR);
               channelInput.current.focus();
               setSubmitting(false);
             }
           }}
         >
           {({ isSubmitting, errors }) => {
-            const inputClassList = cn('form-control', { 'is-invalid': errors.channelName });
+            const inputClassList = cn('form-control', { 'is-invalid': errors.channelName === NETWORK_ERROR });
+            const feedbackClassList = cn('d-block feedback', {
+              'text-muted': errors?.channelName !== NETWORK_ERROR,
+              'invalid-feedback': errors?.channelName === NETWORK_ERROR,
+            });
+
             return (
               <Form>
                 <div className="form-group">
@@ -110,7 +117,7 @@ const ModalAddRenameChannel = () => {
                       className={inputClassList}
                       innerRef={channelInput}
                     />
-                    <div className="d-block invalid-feedback">{errors.channelName}</div>
+                    <div className={feedbackClassList}>{errors.channelName}</div>
                   </div>
                   <div className="d-flex justify-content-end">
                     <Button

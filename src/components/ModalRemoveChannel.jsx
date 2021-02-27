@@ -42,7 +42,6 @@ const ModalRemoveChannel = () => {
 
       <Modal.Body>
         <h5 className="mb-2">Are you sure to remove channel and all its messages?</h5>
-        {isSubmitting && <div className="d-block valid-feedback">Removing the channel, please wait...</div>}
         {removingError && <div className="d-block invalid-feedback">Sorry, something went wrong. Try again later</div>}
       </Modal.Body>
 

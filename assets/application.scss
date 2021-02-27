@@ -1,1 +1,12 @@
 @import '~bootstrap/scss/bootstrap';
+
+.outline-none, .outline-none:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.feedback {
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 80%;
+}

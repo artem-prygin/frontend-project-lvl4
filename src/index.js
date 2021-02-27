@@ -11,11 +11,9 @@ import runApp from './app.jsx';
 if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
 }
+
 const socket = io(window.location.href);
+const app = runApp(gon, socket);
+const container = document.getElementById('chat');
 
-runApp(gon, socket);
-
-ReactDOM.render(
-  runApp(gon, socket),
-  document.getElementById('chat'),
-);
+ReactDOM.render(app, container);
