@@ -8,7 +8,7 @@ const App = () => (
   <>
     <div className="row h-100 pb-3">
       <Channels />
-      <div className="col h-100">
+      <div className="col-12 h-100 col-md chat-container">
         <div className="d-flex flex-column h-100">
           <Chat />
           <MessageInput />

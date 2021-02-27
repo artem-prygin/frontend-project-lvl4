@@ -16,7 +16,7 @@ const Channels = () => {
   };
 
   return (
-    <div className="col-3 border-right overflow-auto h-100">
+    <div className="col-12 border-right channels-container col-md-3">
       <div className="d-flex mb-2">
         <span>Channels</span>
         <Button
@@ -28,7 +28,7 @@ const Channels = () => {
           +
         </Button>
       </div>
-      <ul className="nav flex-column nav-pills nav-fill">
+      <ul className="nav flex-md-column nav-pills nav-fill">
         {channels.map((channel) => <ChannelItem channel={channel} key={channel.id} />)}
       </ul>
     </div>

@@ -2,6 +2,7 @@ doctype html
 html.h-100(lang="en")
   head
     title= Title
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
     link(href=assetPath('main.css') rel="stylesheet")
     script.
       var _rollbarConfig = {
@@ -232,6 +233,6 @@ html.h-100(lang="en")
     script.
       var gon = !{JSON.stringify(gon)};
   body.d-flex.flex-column.h-100
-    .container-lg.h-100.overflow-hidden.p-3
+    .container-lg.h-100.overflow-hidden.p-3.main-container
       .h-100#chat
     script(src=assetPath('main.js'))

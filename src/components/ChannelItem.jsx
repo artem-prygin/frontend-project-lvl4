@@ -20,29 +20,28 @@ const ChannelItem = ({ channel }) => {
 
   const getBtnVariant = (id) => (id === currentChannelId ? 'primary' : 'light');
   const btnClassList = 'nav-link btn-block flex-grow-1 text-left';
+  const itemClassList = 'nav-item mb-2 mr-1';
+
+  const renderLinkBtn = (id, name) => (
+    <Button
+      variant={getBtnVariant(id)}
+      className={btnClassList}
+      onClick={handleSetCurrentChannelId(id)}
+    >
+      {name}
+    </Button>
+  );
 
   const renderDefaultChannel = ({ id, name }) => (
-    <li className="nav-item mb-2" key={id}>
-      <Button
-        variant={getBtnVariant(id)}
-        className={btnClassList}
-        onClick={handleSetCurrentChannelId(id)}
-      >
-        {name}
-      </Button>
+    <li className={itemClassList}>
+      {renderLinkBtn(id, name)}
     </li>
   );
 
   const renderRemovableChannel = ({ id, name }) => (
-    <li className="nav-item mb-2" key={id}>
+    <li className={itemClassList}>
       <Dropdown className="d-flex" as={ButtonGroup}>
-        <Button
-          variant={getBtnVariant(id)}
-          className={btnClassList}
-          onClick={handleSetCurrentChannelId(id)}
-        >
-          {name}
-        </Button>
+        {renderLinkBtn(id, name)}
         <Dropdown.Toggle className="flex-grow-0" variant={getBtnVariant(id)} />
         <Dropdown.Menu>
           <Dropdown.Item
@@ -64,10 +63,10 @@ const ChannelItem = ({ channel }) => {
     </li>
   );
 
-  if (!channel.removable) {
-    return renderDefaultChannel(channel);
+  if (channel.removable) {
+    return renderRemovableChannel(channel);
   }
-  return renderRemovableChannel(channel);
+  return renderDefaultChannel(channel);
 };
 
 export default ChannelItem;
