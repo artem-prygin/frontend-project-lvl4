@@ -7,9 +7,9 @@ import axios from 'axios';
 import reducer from './slices';
 import App from './components/App';
 import Context from './Context';
-import { addMessage, getMessages } from './slices/messagesSlice';
+import { addMessage, storeMessages } from './slices/messagesSlice';
 import {
-  getChannels,
+  storeChannels,
   addChannel,
   removeChannel,
   renameChannel,
@@ -54,16 +54,10 @@ export default (gon, socket) => {
     .on('reconnect', async () => {
       const { data: { data: channelsData } } = await axios.get(routes.channelsPath());
       const channels = channelsData.map((data) => data.attributes);
-      store.dispatch(getChannels(channels));
-      const messagesData = channels
-        .map((channel) => axios
-          .get(routes.channelMessagesPath(channel.id))
-          .then((res) => res.data.data.flatMap((message) => message.attributes)));
-      Promise.all(messagesData)
-        .then((data) => {
-          const messages = data.flat();
-          store.dispatch(getMessages(messages));
-        });
+      store.dispatch(storeChannels(channels));
+      const { data: { data: messagesData } } = await axios.get(routes.messagesPath());
+      const messages = messagesData.map((data) => data.attributes);
+      store.dispatch(storeMessages(messages));
     });
 
   return (

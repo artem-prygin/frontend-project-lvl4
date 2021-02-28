@@ -7,7 +7,7 @@ export const messagesSlice = createSlice({
   name: 'messages',
   initialState: [],
   reducers: {
-    getMessages: (state, action) => {
+    storeMessages: (state, action) => {
       const messages = action.payload;
       state = messages;
     },
@@ -25,7 +25,7 @@ export const messagesSlice = createSlice({
   },
 });
 
-export const { addMessage, getMessages } = messagesSlice.actions;
+export const { addMessage, storeMessages } = messagesSlice.actions;
 export const messagesSelector = (state) => state.messages
   .filter((msg) => msg.channelId === state.channelsData.currentChannelId);
 export default messagesSlice.reducer;

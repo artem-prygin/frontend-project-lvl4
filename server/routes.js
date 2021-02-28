@@ -129,5 +129,15 @@ export default (app, io, defaultState = {}) => {
       };
       reply.send(data);
       io.emit('newMessage', data);
+    })
+    .get('/api/v1/messages', (_req, reply) => {
+      const resources = state.messages.map((c) => ({
+        type: 'messages',
+        attributes: c,
+      }));
+      const response = {
+        data: resources,
+      };
+      reply.send(response);
     });
 };
