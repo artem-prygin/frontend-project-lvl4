@@ -6,6 +6,15 @@ export const channelsSlice = createSlice({
   name: 'channelsData',
   initialState: { channels: [], currentChannelId: null },
   reducers: {
+    getChannels: (state, action) => {
+      const channels = action.payload;
+      state.channels = channels;
+      const channelIds = channels.map((channel) => channel.id);
+      if (!channelIds.includes(state.currentChannelId)) {
+        const defaultChannelId = first(state.channels)?.id;
+        state.currentChannelId = defaultChannelId;
+      }
+    },
     addChannel: (state, action) => {
       const newChannel = action.payload;
       const newChannelId = newChannel.id;
@@ -33,6 +42,7 @@ export const channelsSlice = createSlice({
 });
 
 export const {
+  getChannels,
   addChannel,
   removeChannel,
   renameChannel,

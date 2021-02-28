@@ -3,11 +3,18 @@ import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import faker from 'faker';
 import cookies from 'js-cookie';
+import axios from 'axios';
 import reducer from './slices';
 import App from './components/App';
 import Context from './Context';
-import { addMessage } from './slices/messagesSlice';
-import { addChannel, removeChannel, renameChannel } from './slices/channelsSlice';
+import { addMessage, getMessages } from './slices/messagesSlice';
+import {
+  getChannels,
+  addChannel,
+  removeChannel,
+  renameChannel,
+} from './slices/channelsSlice';
+import routes from './routes';
 
 export default (gon, socket) => {
   if (!cookies.get('username')) {
@@ -22,7 +29,10 @@ export default (gon, socket) => {
     },
     messages: gon.messages,
   };
-  const store = configureStore({ reducer, preloadedState });
+  const store = configureStore({
+    reducer,
+    preloadedState,
+  });
 
   socket
     .on('newMessage', (data) => {
@@ -40,6 +50,20 @@ export default (gon, socket) => {
     .on('renameChannel', (data) => {
       const { data: { attributes: renamedChannel } } = data;
       store.dispatch(renameChannel(renamedChannel));
+    })
+    .on('reconnect', async () => {
+      const { data: { data: channelsData } } = await axios.get(routes.channelsPath());
+      const channels = channelsData.map((data) => data.attributes);
+      store.dispatch(getChannels(channels));
+      const messagesData = channels
+        .map((channel) => axios
+          .get(routes.channelMessagesPath(channel.id))
+          .then((res) => res.data.data.flatMap((message) => message.attributes)));
+      Promise.all(messagesData)
+        .then((data) => {
+          const messages = data.flat();
+          store.dispatch(getMessages(messages));
+        });
     });
 
   return (
