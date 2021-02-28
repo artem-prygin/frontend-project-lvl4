@@ -7,12 +7,12 @@ import axios from 'axios';
 import reducer from './slices';
 import App from './components/App';
 import Context from './Context';
-import { addMessage, storeMessages } from './slices/messagesSlice';
+import { addMessage, storeMessagesThunk } from './slices/messagesSlice';
 import {
-  storeChannels,
   addChannel,
   removeChannel,
   renameChannel,
+  storeChannelsThunk,
 } from './slices/channelsSlice';
 import routes from './routes';
 
@@ -51,13 +51,9 @@ export default (gon, socket) => {
       const { data: { attributes: renamedChannel } } = data;
       store.dispatch(renameChannel(renamedChannel));
     })
-    .on('reconnect', async () => {
-      const { data: { data: channelsData } } = await axios.get(routes.channelsPath());
-      const channels = channelsData.map((data) => data.attributes);
-      store.dispatch(storeChannels(channels));
-      const { data: { data: messagesData } } = await axios.get(routes.messagesPath());
-      const messages = messagesData.map((data) => data.attributes);
-      store.dispatch(storeMessages(messages));
+    .on('connect', async () => {
+      store.dispatch(storeChannelsThunk());
+      store.dispatch(storeMessagesThunk());
     });
 
   return (

@@ -2,13 +2,11 @@ import React, { useEffect, useRef } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import DOMPurify from 'dompurify';
-import axios from 'axios';
 import * as yup from 'yup';
 import cn from 'classnames';
 import { Field, Form, Formik } from 'formik';
-import routes from '../routes';
 import { closeModal, modalSelector } from '../slices/modalSlice';
-import { channelsSelector } from '../slices/channelsSlice';
+import { addChannelThunk, channelsSelector, renameChannelThunk } from '../slices/channelsSlice';
 import {
   NAME_MIN_LENGTH as MIN,
   NAME_MAX_LENGTH as MAX,
@@ -33,15 +31,13 @@ const ModalAddRenameChannel = () => {
     [MODAL_ADD]: {
       title: 'Add channel',
       query: async (name) => {
-        await axios
-          .post(routes.channelsPath(), { data: { attributes: { name } } });
+        dispatch(addChannelThunk(name));
       },
     },
     [MODAL_RENAME]: {
       title: 'Rename channel',
       query: async (name) => {
-        await axios
-          .patch(routes.channelPath(currentChannelId), { data: { attributes: { name } } });
+        dispatch(renameChannelThunk([name, currentChannelId]));
       },
     },
   };

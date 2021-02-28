@@ -1,16 +1,31 @@
 /* eslint-disable no-param-reassign */
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { remove } from 'lodash';
+import axios from 'axios';
 import { removeChannel } from './channelsSlice';
+import routes from '../routes';
+
+export const addMessageThunk = createAsyncThunk(
+  'messagesThunk/addMessage',
+  async ([currentChannelId, body, username]) => {
+    const route = routes.channelMessagesPath(currentChannelId);
+    await axios.post(route, { data: { attributes: { body, username } } });
+  },
+);
+
+export const storeMessagesThunk = createAsyncThunk(
+  'messagesThunk/storeMessages',
+  async () => {
+    const route = routes.messagesPath();
+    const response = await axios.get(route);
+    return response.data;
+  },
+);
 
 export const messagesSlice = createSlice({
   name: 'messages',
   initialState: [],
   reducers: {
-    storeMessages: (state, action) => {
-      const messages = action.payload;
-      state = messages;
-    },
     addMessage: (state, action) => {
       const newMessage = action.payload;
       state.push(newMessage);
@@ -21,6 +36,10 @@ export const messagesSlice = createSlice({
       .addCase(removeChannel, (state, action) => {
         const channelId = action.payload;
         remove(state, (message) => message.channelId === channelId);
+      })
+      .addCase(storeMessagesThunk.fulfilled, (state, action) => {
+        const messages = action.payload.data.map((message) => message.attributes);
+        state = messages;
       });
   },
 });

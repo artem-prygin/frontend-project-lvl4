@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
 import { closeModal, modalSelector } from '../slices/modalSlice';
-import routes from '../routes';
 import { MODAL_REMOVE } from '../constants';
+import { removeChannelThunk } from '../slices/channelsSlice';
 
 const ModalRemoveChannel = () => {
   const dispatch = useDispatch();
@@ -24,8 +23,7 @@ const ModalRemoveChannel = () => {
     try {
       setRemovingError(false);
       setIsSubmitting(true);
-      await axios.delete(routes
-        .channelPath(channelId));
+      dispatch(removeChannelThunk(channelId));
       setIsSubmitting(false);
       dispatch(closeModal());
     } catch (e) {

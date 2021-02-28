@@ -1,16 +1,16 @@
 import React, { useContext, useEffect, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'react-bootstrap';
-import axios from 'axios';
 import DOMPurify from 'dompurify';
 import { Formik, Form, Field } from 'formik';
 import cn from 'classnames';
 import { currentChannelIdSelector } from '../slices/channelsSlice';
 import Context from '../Context';
-import routes from '../routes';
 import { NETWORK_ERROR } from '../constants';
+import { addMessageThunk } from '../slices/messagesSlice';
 
 const MessageInput = () => {
+  const dispatch = useDispatch();
   const { username } = useContext(Context);
   const currentChannelId = useSelector(currentChannelIdSelector);
   const messageInput = useRef(null);
@@ -30,8 +30,7 @@ const MessageInput = () => {
           const { message } = values;
           const body = DOMPurify.sanitize(message);
           try {
-            await axios.post(routes
-              .channelMessagesPath(currentChannelId), { data: { attributes: { body, username } } });
+            dispatch(addMessageThunk([currentChannelId, body, username]));
             resetForm();
             messageInput.current.focus();
           } catch (e) {
