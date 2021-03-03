@@ -34,7 +34,7 @@ const ChannelItem = ({ handleOpenModal, channel }) => {
         <Button
           variant={getBtnVariant(id)}
           className={btnClassList}
-          onClick={handleSetCurrentChannelId(id)}
+          onClick={() => handleSetCurrentChannelId(id)}
         >
           {name}
         </Button>
