@@ -7,6 +7,7 @@ import ChatMessage from './ChatMessage';
 const Chat = () => {
   const messages = useSelector(messagesSelector);
   const chatBox = useRef(null);
+
   useEffect(() => {
     animateScroll.scrollToBottom({
       duration: 300,

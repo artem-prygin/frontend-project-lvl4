@@ -3,12 +3,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { Button } from 'react-bootstrap';
 import DOMPurify from 'dompurify';
+import * as yup from 'yup';
 import { Formik, Form, Field } from 'formik';
 import cn from 'classnames';
 import { currentChannelIdSelector } from '../slices/channelsSlice';
 import Context from '../Context';
 import { NETWORK_ERROR } from '../constants';
 import { addMessageThunk } from '../slices/messagesSlice';
+
+const MAX_LENGTH = 400;
+const validationSchema = yup.object()
+  .shape({
+    message: yup.string()
+      .required('This field is required')
+      .max(MAX_LENGTH, `Maximum ${MAX_LENGTH} symbols`),
+  });
 
 const MessageInput = () => {
   const dispatch = useDispatch();
@@ -25,6 +34,7 @@ const MessageInput = () => {
       <Formik
         initialValues={{ message: '' }}
         validateOnBlur={false}
+        validationSchema={validationSchema}
         onSubmit={async (values, { resetForm, setSubmitting, setFieldError }) => {
           const { message } = values;
           const body = DOMPurify.sanitize(message);
@@ -42,12 +52,16 @@ const MessageInput = () => {
           }
         }}
       >
-        {({ isSubmitting, values, errors }) => {
-          const inputClassList = cn('mr-2 form-control', { 'is-invalid': errors.message });
+        {({ isSubmitting, errors }) => {
+          const inputClassList = cn('form-control mr-2', { 'is-invalid': errors.message === NETWORK_ERROR });
+          const feedbackClassList = cn('d-block feedback position-absolute', {
+            'text-muted': errors?.message !== NETWORK_ERROR,
+            'invalid-feedback': errors?.message === NETWORK_ERROR,
+          });
           return (
             <Form>
               <div className="form-group">
-                <div className="input-group">
+                <div className="input-group position-relative">
                   <Field
                     type="text"
                     name="message"
@@ -60,11 +74,11 @@ const MessageInput = () => {
                   <Button
                     variant="primary"
                     type="submit"
-                    disabled={isSubmitting || values.message.trim().length === 0 || errors.message}
+                    disabled={isSubmitting || errors.message}
                   >
                     Submit
                   </Button>
-                  <div className="d-block invalid-feedback">{errors.message}</div>
+                  <div className={feedbackClassList}>{errors.message}</div>
                 </div>
               </div>
             </Form>

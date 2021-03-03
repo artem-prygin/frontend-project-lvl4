@@ -11,6 +11,15 @@ import { NETWORK_ERROR } from '../constants';
 
 const MIN_LENGTH = 3;
 const MAX_LENGTH = 30;
+const validationSchema = (allChannels, currentChannelName) => yup.object()
+  .shape({
+    channelName: yup.string()
+      .required('This field is required')
+      .min(MIN_LENGTH, `Name should be between ${MIN_LENGTH} and ${MAX_LENGTH} symbols`)
+      .max(MAX_LENGTH, `Name should be between ${MIN_LENGTH} and ${MAX_LENGTH} symbols`)
+      .notOneOf(allChannels, 'This name is already taken')
+      .notOneOf([currentChannelName], 'This is current channel name'),
+  });
 
 const ModalAddRenameChannel = ({ query, id, handleModalClose }) => {
   const currentChannelName = useSelector(channelsSelector)
@@ -23,19 +32,10 @@ const ModalAddRenameChannel = ({ query, id, handleModalClose }) => {
     channelInput?.current?.select();
   });
 
-  const validationSchema = yup.object().shape({
-    channelName: yup.string()
-      .required('This field is required')
-      .min(MIN_LENGTH, `Name should be between ${MIN_LENGTH} and ${MAX_LENGTH} symbols`)
-      .max(MAX_LENGTH, `Name should be between ${MIN_LENGTH} and ${MAX_LENGTH} symbols`)
-      .notOneOf(allChannels, 'This name is already taken')
-      .notOneOf([currentChannelName], 'This is current channel name'),
-  });
-
   return (
     <Formik
       initialValues={{ channelName: currentChannelName }}
-      validationSchema={validationSchema}
+      validationSchema={validationSchema(allChannels, currentChannelName)}
       validateOnMount
       onSubmit={async (values, { setSubmitting, setFieldError }) => {
         const { channelName } = values;
@@ -58,7 +58,7 @@ const ModalAddRenameChannel = ({ query, id, handleModalClose }) => {
     >
       {({ isSubmitting, errors }) => {
         const inputClassList = cn('form-control', { 'is-invalid': errors.channelName === NETWORK_ERROR });
-        const feedbackClassList = cn('d-block feedback', {
+        const feedbackClassList = cn('d-block feedback position-absolute', {
           'text-muted': errors?.channelName !== NETWORK_ERROR,
           'invalid-feedback': errors?.channelName === NETWORK_ERROR,
         });
@@ -66,7 +66,7 @@ const ModalAddRenameChannel = ({ query, id, handleModalClose }) => {
         return (
           <Form>
             <div className="form-group">
-              <div className="input-group mb-2">
+              <div className="input-group position-relative mb-2">
                 <Field
                   type="text"
                   name="channelName"
