@@ -3,7 +3,6 @@ import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import faker from 'faker';
 import cookies from 'js-cookie';
-import axios from 'axios';
 import reducer from './slices';
 import App from './components/App';
 import Context from './Context';
@@ -14,7 +13,6 @@ import {
   renameChannel,
   storeChannelsThunk,
 } from './slices/channelsSlice';
-import routes from './routes';
 
 export default (gon, socket) => {
   if (!cookies.get('username')) {

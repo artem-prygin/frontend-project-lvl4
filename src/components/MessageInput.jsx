@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
 import { Button } from 'react-bootstrap';
 import DOMPurify from 'dompurify';
 import { Formik, Form, Field } from 'formik';
@@ -16,9 +17,7 @@ const MessageInput = () => {
   const messageInput = useRef(null);
 
   useEffect(() => {
-    if (messageInput.current) {
-      messageInput.current.focus();
-    }
+    messageInput?.current?.focus();
   });
 
   return (
@@ -30,14 +29,17 @@ const MessageInput = () => {
           const { message } = values;
           const body = DOMPurify.sanitize(message);
           try {
-            dispatch(addMessageThunk([currentChannelId, body, username]));
+            const result = await dispatch(addMessageThunk([currentChannelId, body, username]));
+            unwrapResult(result);
             resetForm();
             messageInput.current.focus();
+            setSubmitting(false);
           } catch (e) {
+            console.log(e);
             setFieldError('message', NETWORK_ERROR);
             messageInput.current.focus();
+            setSubmitting(false);
           }
-          setSubmitting(false);
         }}
       >
         {({ isSubmitting, values, errors }) => {

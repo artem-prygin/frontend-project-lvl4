@@ -2,7 +2,7 @@ import React from 'react';
 import Channels from './Channels.jsx';
 import Chat from './Chat.jsx';
 import MessageInput from './MessageInput.jsx';
-import Modals from './Modals';
+import BootstrapModal from './BootstrapModal';
 
 const App = () => (
   <>
@@ -15,7 +15,7 @@ const App = () => (
         </div>
       </div>
     </div>
-    <Modals />
+    <BootstrapModal />
   </>
 );
 

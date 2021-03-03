@@ -10,8 +10,7 @@ const Channels = () => {
   const channels = useSelector(channelsSelector);
   const dispatch = useDispatch();
 
-  const handleOpenModal = (e) => {
-    const { modalType, channelId } = e.target?.dataset;
+  const handleOpenModal = (modalType, channelId = null) => {
     dispatch(openModal({ modalType, data: { channelId } }));
   };
 
@@ -22,14 +21,19 @@ const Channels = () => {
         <Button
           variant="link"
           className="ml-auto p-0 text-decoration-none outline-none"
-          data-modal-type={MODAL_ADD}
-          onClick={handleOpenModal}
+          onClick={() => handleOpenModal(MODAL_ADD)}
         >
           +
         </Button>
       </div>
       <ul className="nav flex-md-column nav-pills nav-fill">
-        {channels.map((channel) => <ChannelItem channel={channel} key={channel.id} />)}
+        {channels.map((channel) => (
+          <ChannelItem
+            handleOpenModal={handleOpenModal}
+            channel={channel}
+            key={channel.id}
+          />
+        ))}
       </ul>
     </div>
   );

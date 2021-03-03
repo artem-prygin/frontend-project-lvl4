@@ -8,8 +8,7 @@ export const addChannelThunk = createAsyncThunk(
   'channelsThunk/addChannel',
   async (name) => {
     const route = routes.channelsPath();
-    await axios
-      .post(route, { data: { attributes: { name } } });
+    await axios.post(route, { data: { attributes: { name } } });
   },
 );
 
@@ -17,8 +16,7 @@ export const renameChannelThunk = createAsyncThunk(
   'channelsThunk/renameChannel',
   async ([name, currentChannelId]) => {
     const route = routes.channelPath(currentChannelId);
-    await axios
-      .patch(route, { data: { attributes: { name } } });
+    await axios.patch(route, { data: { attributes: { name } } });
   },
 );
 
@@ -26,8 +24,7 @@ export const removeChannelThunk = createAsyncThunk(
   'channelsThunk/removeChannel',
   async (channelId) => {
     const route = routes.channelPath(channelId);
-    await axios
-      .delete(route);
+    await axios.delete(route);
   },
 );
 
@@ -44,7 +41,7 @@ export const channelsSlice = createSlice({
   name: 'channelsData',
   initialState: {
     channels: [],
-    currentChannelId: null
+    currentChannelId: null,
   },
   reducers: {
     addChannel: (state, action) => {
@@ -64,7 +61,7 @@ export const channelsSlice = createSlice({
     renameChannel: (state, action) => {
       const {
         id,
-        name
+        name,
       } = action.payload;
       const channelToRename = state.channels.find((channel) => channel.id === id);
       channelToRename.name = name;
