@@ -42,7 +42,6 @@ const ModalAddRenameChannel = ({ query, id, handleModalClose }) => {
     try {
       const result = await query(name);
       unwrapResult(result);
-      console.log(unwrapResult(result));
       setSubmitting(false);
       handleModalClose();
     } catch (e) {
