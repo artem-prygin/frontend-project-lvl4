@@ -11,7 +11,7 @@ const ModalRemoveChannel = ({ query, id, handleModalClose }) => {
     try {
       setRemovingError(false);
       setIsSubmitting(true);
-      const result = query(id);
+      const result = await query(id);
       unwrapResult(result);
       setRemovingError(false);
       setIsSubmitting(false);
