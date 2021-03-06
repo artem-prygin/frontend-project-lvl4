@@ -58,13 +58,7 @@ const MessageInput = () => {
         onSubmit={onSubmit}
         render={({ isSubmitting, isValid, errors }) => (
           <Form>
-            <Field
-              name="message"
-              type="text"
-              aria-label="body"
-              autoComplete="off"
-              disabled={isSubmitting}
-            >
+            <Field name="message">
               {({ field }) => (
                 <FormGroup
                   className="input-group"
@@ -72,6 +66,8 @@ const MessageInput = () => {
                 >
                   <FormControl
                     type="text"
+                    aria-label="body"
+                    disabled={isSubmitting}
                     value={field.value}
                     onChange={field.onChange}
                     ref={messageInput}

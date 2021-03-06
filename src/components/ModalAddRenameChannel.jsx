@@ -61,13 +61,7 @@ const ModalAddRenameChannel = ({ query, id, handleModalClose }) => {
     >
       {({ isSubmitting, isValid, errors }) => (
         <Form>
-          <Field
-            name="channelName"
-            type="text"
-            aria-label="body"
-            autoComplete="off"
-            disabled={isSubmitting}
-          >
+          <Field name="channelName">
             {({ field }) => (
               <FormGroup>
                 <FormGroup
@@ -76,6 +70,8 @@ const ModalAddRenameChannel = ({ query, id, handleModalClose }) => {
                 >
                   <FormControl
                     type="text"
+                    disabled={isSubmitting}
+                    aria-label="body"
                     value={field.value}
                     onChange={field.onChange}
                     ref={channelInput}
