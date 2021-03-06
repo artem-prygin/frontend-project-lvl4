@@ -4,7 +4,7 @@ import { remove, first } from 'lodash';
 import axios from 'axios';
 import routes from '../routes';
 
-export const addChannelThunk = createAsyncThunk(
+export const postChannel = createAsyncThunk(
   'channelsThunk/addChannel',
   async (name) => {
     const route = routes.channelsPath();
@@ -12,15 +12,15 @@ export const addChannelThunk = createAsyncThunk(
   },
 );
 
-export const renameChannelThunk = createAsyncThunk(
+export const patchChannel = createAsyncThunk(
   'channelsThunk/renameChannel',
-  async ([name, currentChannelId]) => {
+  async ({ name, currentChannelId }) => {
     const route = routes.channelPath(currentChannelId);
     await axios.patch(route, { data: { attributes: { name } } });
   },
 );
 
-export const removeChannelThunk = createAsyncThunk(
+export const deleteChannel = createAsyncThunk(
   'channelsThunk/removeChannel',
   async (channelId) => {
     const route = routes.channelPath(channelId);
@@ -28,7 +28,7 @@ export const removeChannelThunk = createAsyncThunk(
   },
 );
 
-export const storeChannelsThunk = createAsyncThunk(
+export const fetchAllChannels = createAsyncThunk(
   'channelsThunk/storeChannels',
   async () => {
     const route = routes.channelsPath();
@@ -73,7 +73,7 @@ export const channelsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(storeChannelsThunk.fulfilled, (state, action) => {
+      .addCase(fetchAllChannels.fulfilled, (state, action) => {
         const channels = action.payload.data.map((channel) => channel.attributes);
         state.channels = channels;
         const channelIds = channels.map((channel) => channel.id);

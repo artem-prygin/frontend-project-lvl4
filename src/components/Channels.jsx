@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'react-bootstrap';
 import { channelsSelector } from '../slices/channelsSlice';
 import { openModal } from '../slices/modalSlice';
-import { MODAL_ADD } from '../constants';
+import { MODAL_TYPE } from '../constants';
 import ChannelItem from './ChannelItem';
 
 const Channels = () => {
@@ -21,7 +21,7 @@ const Channels = () => {
         <Button
           variant="link"
           className="ml-auto p-0 text-decoration-none outline-none"
-          onClick={() => handleOpenModal(MODAL_ADD)}
+          onClick={() => handleOpenModal(MODAL_TYPE.add)}
         >
           +
         </Button>

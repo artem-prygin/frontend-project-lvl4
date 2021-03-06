@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, ButtonGroup } from 'react-bootstrap';
 import { unwrapResult } from '@reduxjs/toolkit';
+import Feedback from 'react-bootstrap/Feedback';
 
 const ModalRemoveChannel = ({ query, id, handleModalClose }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -11,6 +12,7 @@ const ModalRemoveChannel = ({ query, id, handleModalClose }) => {
       setRemovingError(false);
       setIsSubmitting(true);
       const result = query(id);
+      console.log(result);
       unwrapResult(result);
       setRemovingError(false);
       setIsSubmitting(false);
@@ -26,24 +28,25 @@ const ModalRemoveChannel = ({ query, id, handleModalClose }) => {
     <>
       <h5 className="mb-2">Are you sure to remove channel and all its messages?</h5>
       {removingError
-      && <div className="d-block invalid-feedback">Sorry, something went wrong. Try again later</div>}
+      && <Feedback className="d-block invalid-feedback">Sorry, something went wrong. Try again later</Feedback>}
       <hr />
-      <div className="d-flex justify-content-between mt-2">
+      <ButtonGroup className="d-flex justify-content-between mt-2">
         <Button
           variant="secondary"
-          className="mr-2"
+          className="mr-2 flex-grow-0"
           onClick={handleModalClose}
         >
           Cancel
         </Button>
         <Button
           variant="danger"
+          className="flex-grow-0"
           disabled={isSubmitting}
           onClick={handleChannelRemove}
         >
           Submit
         </Button>
-      </div>
+      </ButtonGroup>
     </>
   );
 };

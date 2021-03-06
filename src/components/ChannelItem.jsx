@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, ButtonGroup, Dropdown } from 'react-bootstrap';
 import { currentChannelIdSelector, setCurrentChannelId } from '../slices/channelsSlice';
-import { MODAL_REMOVE, MODAL_RENAME } from '../constants';
+import { MODAL_TYPE } from '../constants';
 
 const ChannelItem = ({ handleOpenModal, channel }) => {
   const currentChannelId = useSelector(currentChannelIdSelector);
@@ -34,19 +34,19 @@ const ChannelItem = ({ handleOpenModal, channel }) => {
         <Button
           variant={getBtnVariant(id)}
           className={btnClassList}
-          onClick={() => handleSetCurrentChannelId(id)}
+          onClick={handleSetCurrentChannelId(id)}
         >
           {name}
         </Button>
         <Dropdown.Toggle className="flex-grow-0" variant={getBtnVariant(id)} />
         <Dropdown.Menu>
           <Dropdown.Item
-            onClick={() => handleOpenModal(MODAL_RENAME, id)}
+            onClick={() => handleOpenModal(MODAL_TYPE.rename, id)}
           >
             Rename
           </Dropdown.Item>
           <Dropdown.Item
-            onClick={() => handleOpenModal(MODAL_REMOVE, id)}
+            onClick={() => handleOpenModal(MODAL_TYPE.remove, id)}
           >
             Remove
           </Dropdown.Item>

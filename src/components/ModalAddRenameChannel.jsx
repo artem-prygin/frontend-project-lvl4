@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, FormControl, FormGroup } from 'react-bootstrap';
+import Feedback from 'react-bootstrap/Feedback';
 import { useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import DOMPurify from 'dompurify';
@@ -11,20 +12,19 @@ import { NETWORK_ERROR } from '../constants';
 
 const MIN_LENGTH = 3;
 const MAX_LENGTH = 30;
-const validationSchema = (allChannels, currentChannelName) => yup.object()
+const validationSchema = (currentChannelName, channelNames) => yup.object()
   .shape({
     channelName: yup.string()
       .required('This field is required')
       .min(MIN_LENGTH, `Name should be between ${MIN_LENGTH} and ${MAX_LENGTH} symbols`)
       .max(MAX_LENGTH, `Name should be between ${MIN_LENGTH} and ${MAX_LENGTH} symbols`)
-      .notOneOf(allChannels, 'This name is already taken')
-      .notOneOf([currentChannelName], 'This is current channel name'),
+      .notOneOf(channelNames, 'This name is already taken'),
   });
 
 const ModalAddRenameChannel = ({ query, id, handleModalClose }) => {
   const currentChannelName = useSelector(channelsSelector)
     .find((channel) => channel.id === id)?.name || '';
-  const allChannels = useSelector(channelsSelector)
+  const channelNames = useSelector(channelsSelector)
     .map((channel) => channel.name);
   const channelInput = useRef(null);
 
@@ -32,71 +32,94 @@ const ModalAddRenameChannel = ({ query, id, handleModalClose }) => {
     channelInput?.current?.select();
   });
 
+  const onSubmit = async (values, handlers) => {
+    const { setSubmitting, setFieldError } = handlers;
+    const { channelName } = values;
+    const name = DOMPurify
+      .sanitize(channelName)
+      .trim()
+      .replace(/\s+/g, ' ');
+    try {
+      const result = await query(name);
+      unwrapResult(result);
+      console.log(unwrapResult(result));
+      setSubmitting(false);
+      handleModalClose();
+    } catch (e) {
+      console.log(e);
+      setFieldError('channelName', NETWORK_ERROR);
+      channelInput.current.focus();
+      setSubmitting(false);
+    }
+  };
+
   return (
     <Formik
       initialValues={{ channelName: currentChannelName }}
-      validationSchema={validationSchema(allChannels, currentChannelName)}
-      validateOnMount
-      onSubmit={async (values, { setSubmitting, setFieldError }) => {
-        const { channelName } = values;
-        const name = DOMPurify
-          .sanitize(channelName)
-          .trim()
-          .replace(/\s+/g, ' ');
-        try {
-          const result = await query(name);
-          unwrapResult(result);
-          setSubmitting(false);
-          handleModalClose();
-        } catch (e) {
-          console.log(e);
-          setFieldError('channelName', NETWORK_ERROR);
-          channelInput.current.focus();
-          setSubmitting(false);
-        }
-      }}
+      validationSchema={validationSchema(currentChannelName, channelNames)}
+      validateOnBlur
+      onSubmit={onSubmit}
     >
-      {({ isSubmitting, errors }) => {
-        const inputClassList = cn('form-control', { 'is-invalid': errors.channelName === NETWORK_ERROR });
-        const feedbackClassList = cn('d-block feedback position-absolute', {
-          'text-muted': errors?.channelName !== NETWORK_ERROR,
-          'invalid-feedback': errors?.channelName === NETWORK_ERROR,
-        });
-
-        return (
-          <Form>
-            <div className="form-group">
-              <div className="input-group position-relative mb-2">
-                <Field
-                  type="text"
-                  name="channelName"
-                  aria-label="body"
-                  autoComplete="off"
-                  className={inputClassList}
-                  innerRef={channelInput}
-                />
-                <div className={feedbackClassList}>{errors.channelName}</div>
-              </div>
-              <div className="d-flex justify-content-end">
-                <Button
-                  variant="secondary"
-                  className="mr-2"
-                  onClick={handleModalClose}
+      {({ isSubmitting, isValid, errors }) => (
+        <Form>
+          <Field
+            name="channelName"
+            type="text"
+            aria-label="body"
+            autoComplete="off"
+            disabled={isSubmitting}
+          >
+            {({ field }) => (
+              <FormGroup>
+                <FormGroup
+                  controlId="channelName"
+                  className="position-relative"
                 >
-                  Cancel
-                </Button>
-                <Button
-                  variant="primary"
-                  type="submit"
-                  disabled={isSubmitting || errors.channelName}
+                  <FormControl
+                    type="text"
+                    value={field.value}
+                    onChange={field.onChange}
+                    ref={channelInput}
+                    placeholder="Type channel name..."
+                    autoComplete="off"
+                    isInvalid={!isValid && errors.channelName === NETWORK_ERROR}
+                    className="mr-2"
+                  />
+                  {errors.channelName && (
+                    <Feedback
+                      className={cn('d-block position-absolute feedback', {
+                        'text-muted': !isValid && errors.channelName !== NETWORK_ERROR,
+                        'invalid-feedback': !isValid && errors.channelName === NETWORK_ERROR,
+                      })}
+                    >
+                      {errors.channelName}
+                    </Feedback>
+                  )}
+                </FormGroup>
+                <FormGroup
+                  className="d-flex justify-content-end mt-2"
+                  controlId="message"
                 >
-                  Submit
-                </Button>
-              </div>
-            </div>
-          </Form>
-        );
-      }}
+                  <Button
+                    variant="secondary"
+                    className="mr-2"
+                    onClick={handleModalClose}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="primary"
+                    type="submit"
+                    disabled={(!isValid && errors.channelName !== NETWORK_ERROR) || isSubmitting || field.value === ''}
+                  >
+                    Submit
+                  </Button>
+                </FormGroup>
+              </FormGroup>
+            )}
+          </Field>
+        </Form>
+      )}
     </Formik>
   );
 };
