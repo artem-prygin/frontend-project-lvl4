@@ -4,7 +4,7 @@ import { Button, ButtonGroup, Dropdown } from 'react-bootstrap';
 import { currentChannelIdSelector, setCurrentChannelId } from '../slices/channelsSlice';
 import { MODAL_TYPE } from '../constants';
 
-const DefaultChannelItem = (channel, handleSetCurrentChannelId, getBtnVariant) => {
+const DefaultChannelItem = ({ channel, handleSetCurrentChannelId, getBtnVariant }) => {
   const { name, id } = channel;
   return (
     <Button
@@ -17,12 +17,12 @@ const DefaultChannelItem = (channel, handleSetCurrentChannelId, getBtnVariant) =
   );
 };
 
-const RemovableChannelItem = (
+const RemovableChannelItem = ({
   channel,
   handleSetCurrentChannelId,
   handleOpenModal,
   getBtnVariant,
-) => {
+}) => {
   const { id: channelId } = channel;
   return (
     <Dropdown className="d-flex" as={ButtonGroup}>
@@ -56,16 +56,20 @@ const ChannelItem = ({ handleOpenModal, channel }) => {
   return (
     <li className="nav-item mb-2 mr-1">
       {channel.removable
-        ? RemovableChannelItem(
-          channel,
-          handleSetCurrentChannelId,
-          getBtnVariant,
-          handleOpenModal,
+        ? (
+          <RemovableChannelItem
+            channel={channel}
+            handleSetCurrentChannelId={handleSetCurrentChannelId}
+            handleOpenModal={handleOpenModal}
+            getBtnVariant={getBtnVariant}
+          />
         )
-        : DefaultChannelItem(
-          channel,
-          handleSetCurrentChannelId,
-          getBtnVariant,
+        : (
+          <DefaultChannelItem
+            channel={channel}
+            handleSetCurrentChannelId={handleSetCurrentChannelId}
+            getBtnVariant={getBtnVariant}
+          />
         )}
     </li>
   );
