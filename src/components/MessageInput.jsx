@@ -10,13 +10,13 @@ import cn from 'classnames';
 import { currentChannelIdSelector } from '../slices/channelsSlice';
 import Context from '../Context';
 import { NETWORK_ERROR } from '../constants';
-import { postMessage } from '../slices/messagesSlice';
+import { postMessageAsync } from '../slices/messagesSlice';
 
 const MESSAGE_MAX_LENGTH = 400;
 const validationSchema = yup.object()
   .shape({
     message: yup.string()
-      .required('This field is required')
+      .required('')
       .max(MESSAGE_MAX_LENGTH, `Maximum ${MESSAGE_MAX_LENGTH} symbols`),
   });
 
@@ -32,16 +32,15 @@ const MessageInput = () => {
     const body = DOMPurify.sanitize(message);
     try {
       const payload = { currentChannelId, body, username };
-      const result = await dispatch(postMessage(payload));
+      const result = await dispatch(postMessageAsync(payload));
+      setSubmitting(false);
       unwrapResult(result);
       resetForm();
       messageInput.current.focus();
-      setSubmitting(false);
     } catch (e) {
       console.log(e);
-      setFieldError('message', NETWORK_ERROR);
       messageInput.current.focus();
-      setSubmitting(false);
+      setFieldError('message', NETWORK_ERROR);
     }
   };
 
@@ -85,7 +84,7 @@ const MessageInput = () => {
                   </Button>
                   {errors.message && (
                     <Feedback
-                      className={cn('d-block position-absolute feedback', {
+                      className={cn('d-block position-absolute feedback invalid-feedback', {
                         'text-muted': !isValid && errors.message !== NETWORK_ERROR,
                         'invalid-feedback': !isValid && errors.message === NETWORK_ERROR,
                       })}

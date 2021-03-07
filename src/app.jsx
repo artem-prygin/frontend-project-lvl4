@@ -6,12 +6,12 @@ import cookies from 'js-cookie';
 import reducer from './slices';
 import App from './components/App';
 import Context from './Context';
-import { addMessage, fetchAllMessages } from './slices/messagesSlice';
+import { addMessage, fetchAllMessagesAsync } from './slices/messagesSlice';
 import {
   addChannel,
   removeChannel,
   renameChannel,
-  fetchAllChannels,
+  fetchAllChannelsAsync,
 } from './slices/channelsSlice';
 
 export default (gon, socket) => {
@@ -50,8 +50,8 @@ export default (gon, socket) => {
       store.dispatch(renameChannel(renamedChannel));
     })
     .on('reconnect', async () => {
-      store.dispatch(fetchAllChannels());
-      store.dispatch(fetchAllMessages());
+      store.dispatch(fetchAllChannelsAsync());
+      store.dispatch(fetchAllMessagesAsync());
     });
 
   return (

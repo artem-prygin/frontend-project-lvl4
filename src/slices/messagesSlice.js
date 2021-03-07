@@ -5,8 +5,8 @@ import axios from 'axios';
 import { removeChannel } from './channelsSlice';
 import routes from '../routes';
 
-export const postMessage = createAsyncThunk(
-  'messagesThunk/addMessage',
+export const postMessageAsync = createAsyncThunk(
+  'messages/addMessageAsync',
   async (payload) => {
     const { currentChannelId, body, username } = payload;
     const route = routes.channelMessagesPath(currentChannelId);
@@ -14,12 +14,13 @@ export const postMessage = createAsyncThunk(
   },
 );
 
-export const fetchAllMessages = createAsyncThunk(
-  'messagesThunk/storeMessages',
+export const fetchAllMessagesAsync = createAsyncThunk(
+  'messages/storeMessagesAsync',
   async () => {
     const route = routes.messagesPath();
     const response = await axios.get(route);
-    return response.data;
+    const messages = response.data.data.map((message) => message.attributes);
+    return messages;
   },
 );
 
@@ -38,8 +39,8 @@ export const messagesSlice = createSlice({
         const channelId = action.payload;
         remove(state, (message) => message.channelId === channelId);
       })
-      .addCase(fetchAllMessages.fulfilled, (state, action) => {
-        const messages = action.payload.data.map((message) => message.attributes);
+      .addCase(fetchAllMessagesAsync.fulfilled, (state, action) => {
+        const { messages } = action.payload;
         state = messages;
       });
   },

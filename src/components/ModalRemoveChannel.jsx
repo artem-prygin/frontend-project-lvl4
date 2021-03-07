@@ -3,7 +3,7 @@ import { Button, ButtonGroup } from 'react-bootstrap';
 import { unwrapResult } from '@reduxjs/toolkit';
 import Feedback from 'react-bootstrap/Feedback';
 
-const ModalRemoveChannel = ({ query, id, handleModalClose }) => {
+const ModalRemoveChannel = ({ handleQuery, handleModalClose, id }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [removingError, setRemovingError] = useState(false);
 
@@ -11,7 +11,7 @@ const ModalRemoveChannel = ({ query, id, handleModalClose }) => {
     try {
       setRemovingError(false);
       setIsSubmitting(true);
-      const result = await query(id);
+      const result = await handleQuery(id);
       unwrapResult(result);
       setRemovingError(false);
       setIsSubmitting(false);

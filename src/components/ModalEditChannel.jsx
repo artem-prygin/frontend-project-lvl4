@@ -15,13 +15,13 @@ const MAX_LENGTH = 30;
 const validationSchema = (currentChannelName, channelNames) => yup.object()
   .shape({
     channelName: yup.string()
-      .required('This field is required')
+      .required('')
       .min(MIN_LENGTH, `Name should be between ${MIN_LENGTH} and ${MAX_LENGTH} symbols`)
       .max(MAX_LENGTH, `Name should be between ${MIN_LENGTH} and ${MAX_LENGTH} symbols`)
       .notOneOf(channelNames, 'This name is already taken'),
   });
 
-const ModalAddRenameChannel = ({ query, id, handleModalClose }) => {
+const ModalEditChannel = ({ handleQuery, handleModalClose, id }) => {
   const currentChannelName = useSelector(channelsSelector)
     .find((channel) => channel.id === id)?.name || '';
   const channelNames = useSelector(channelsSelector)
@@ -40,7 +40,7 @@ const ModalAddRenameChannel = ({ query, id, handleModalClose }) => {
       .trim()
       .replace(/\s+/g, ' ');
     try {
-      const result = await query(name);
+      const result = await handleQuery(name, id);
       unwrapResult(result);
       setSubmitting(false);
       handleModalClose();
@@ -119,4 +119,4 @@ const ModalAddRenameChannel = ({ query, id, handleModalClose }) => {
   );
 };
 
-export default ModalAddRenameChannel;
+export default ModalEditChannel;
