@@ -1,14 +1,12 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { Button, ButtonGroup, Dropdown } from 'react-bootstrap';
-import { currentChannelIdSelector, setCurrentChannelId } from '../slices/channelsSlice';
 import { MODAL_TYPE } from '../constants';
 
-const DefaultChannelItem = ({ channel, handleSetCurrentChannelId, getBtnVariant }) => {
+const DefaultChannelItem = ({ channel, handleSetCurrentChannelId, btnVariant }) => {
   const { name, id } = channel;
   return (
     <Button
-      variant={getBtnVariant(id)}
+      variant={btnVariant}
       className="nav-link btn-block flex-grow-1 text-left"
       onClick={handleSetCurrentChannelId(id)}
     >
@@ -21,7 +19,7 @@ const RemovableChannelItem = ({
   channel,
   handleSetCurrentChannelId,
   handleOpenModal,
-  getBtnVariant,
+  btnVariant,
 }) => {
   const { id: channelId } = channel;
   return (
@@ -29,14 +27,14 @@ const RemovableChannelItem = ({
       <DefaultChannelItem
         channel={channel}
         handleSetCurrentChannelId={handleSetCurrentChannelId}
-        getBtnVariant={getBtnVariant}
+        btnVariant={btnVariant}
       />
-      <Dropdown.Toggle className="flex-grow-0" variant={getBtnVariant(channelId)} />
+      <Dropdown.Toggle className="flex-grow-0" variant={btnVariant} />
       <Dropdown.Menu>
-        <Dropdown.Item onClick={() => handleOpenModal(MODAL_TYPE.rename, channelId)}>
+        <Dropdown.Item onClick={handleOpenModal(MODAL_TYPE.RENAME, channelId)}>
           Rename
         </Dropdown.Item>
-        <Dropdown.Item onClick={() => handleOpenModal(MODAL_TYPE.remove, channelId)}>
+        <Dropdown.Item onClick={handleOpenModal(MODAL_TYPE.REMOVE, channelId)}>
           Remove
         </Dropdown.Item>
       </Dropdown.Menu>
@@ -44,14 +42,13 @@ const RemovableChannelItem = ({
   );
 };
 
-const ChannelItem = ({ handleOpenModal, channel }) => {
-  const dispatch = useDispatch();
-  const handleSetCurrentChannelId = (id) => () => {
-    dispatch(setCurrentChannelId(id));
-  };
-
-  const currentChannelId = useSelector(currentChannelIdSelector);
-  const getBtnVariant = (id) => (id === currentChannelId ? 'primary' : 'light');
+const ChannelItem = ({
+  handleOpenModal,
+  handleSetCurrentChannelId,
+  channel,
+  currentChannelId,
+}) => {
+  const btnVariant = channel.id === currentChannelId ? 'primary' : 'light';
 
   return (
     <li className="nav-item mb-2 mr-1">
@@ -61,14 +58,14 @@ const ChannelItem = ({ handleOpenModal, channel }) => {
             channel={channel}
             handleSetCurrentChannelId={handleSetCurrentChannelId}
             handleOpenModal={handleOpenModal}
-            getBtnVariant={getBtnVariant}
+            btnVariant={btnVariant}
           />
         )
         : (
           <DefaultChannelItem
             channel={channel}
             handleSetCurrentChannelId={handleSetCurrentChannelId}
-            getBtnVariant={getBtnVariant}
+            btnVariant={btnVariant}
           />
         )}
     </li>

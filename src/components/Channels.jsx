@@ -1,7 +1,11 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'react-bootstrap';
-import { channelsSelector } from '../slices/channelsSlice';
+import {
+  channelsSelector,
+  currentChannelIdSelector,
+  setCurrentChannelId,
+} from '../slices/channelsSlice';
 import { openModal } from '../slices/modalSlice';
 import { MODAL_TYPE } from '../constants';
 import ChannelItem from './ChannelItem';
@@ -9,8 +13,13 @@ import ChannelItem from './ChannelItem';
 const Channels = () => {
   const channels = useSelector(channelsSelector);
   const dispatch = useDispatch();
+  const currentChannelId = useSelector(currentChannelIdSelector);
 
-  const handleOpenModal = (modalType, channelId = null) => {
+  const handleSetCurrentChannelId = (id) => () => {
+    dispatch(setCurrentChannelId(id));
+  };
+
+  const handleOpenModal = (modalType, channelId = null) => () => {
     dispatch(openModal({ modalType, data: { channelId } }));
   };
 
@@ -21,7 +30,7 @@ const Channels = () => {
         <Button
           variant="link"
           className="ml-auto p-0 text-decoration-none outline-none"
-          onClick={() => handleOpenModal(MODAL_TYPE.add)}
+          onClick={handleOpenModal(MODAL_TYPE.ADD)}
         >
           +
         </Button>
@@ -30,6 +39,8 @@ const Channels = () => {
         {channels.map((channel) => (
           <ChannelItem
             handleOpenModal={handleOpenModal}
+            handleSetCurrentChannelId={handleSetCurrentChannelId}
+            currentChannelId={currentChannelId}
             channel={channel}
             key={channel.id}
           />

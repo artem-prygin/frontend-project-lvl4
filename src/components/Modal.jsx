@@ -8,19 +8,19 @@ import { postChannelAsync, deleteChannelAsync, patchChannelAsync } from '../slic
 import { closeModal, modalSelector } from '../slices/modalSlice';
 
 const modalMapping = (dispatch) => ({
-  [MODAL_TYPE.add]: {
+  [MODAL_TYPE.ADD]: {
     title: 'Add channel',
     handleQuery: (name) => dispatch(postChannelAsync(name)),
     component: ModalEditChannel,
   },
-  [MODAL_TYPE.rename]: {
+  [MODAL_TYPE.RENAME]: {
     title: 'Rename channel',
     handleQuery: (name, currentChannelId) => (
       dispatch(patchChannelAsync({ name, currentChannelId }))
     ),
     component: ModalEditChannel,
   },
-  [MODAL_TYPE.remove]: {
+  [MODAL_TYPE.REMOVE]: {
     title: 'Remove channel',
     handleQuery: (channelId) => dispatch(deleteChannelAsync(channelId)),
     component: ModalRemoveChannel,

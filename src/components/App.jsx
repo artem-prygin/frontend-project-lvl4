@@ -11,7 +11,9 @@ const App = () => (
       <div className="col-12 h-100 col-md">
         <div className="d-flex flex-column h-100">
           <Chat />
-          <MessageInput />
+          <div className="mt-auto">
+            <MessageInput />
+          </div>
         </div>
       </div>
     </div>

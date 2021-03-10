@@ -94,4 +94,8 @@ export const {
 } = channelsSlice.actions;
 export const channelsSelector = (state) => state.channelsData.channels;
 export const currentChannelIdSelector = (state) => state.channelsData.currentChannelId;
+export const currentChannelNameByIdSelector = (id) => (state) => state.channelsData.channels
+  .find((channel) => channel.id === id)?.name || '';
+export const channelNamesSelector = (state) => state.channelsData.channels
+  .map((channel) => channel.name);
 export default channelsSlice.reducer;

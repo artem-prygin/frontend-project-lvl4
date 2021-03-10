@@ -4,43 +4,43 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import Feedback from 'react-bootstrap/Feedback';
 
 const ModalRemoveChannel = ({ handleQuery, handleModalClose, id }) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [removingError, setRemovingError] = useState(false);
 
   const handleChannelRemove = async () => {
     try {
       setRemovingError(false);
-      setIsSubmitting(true);
+      setIsLoading(true);
       const result = await handleQuery(id);
       unwrapResult(result);
       setRemovingError(false);
-      setIsSubmitting(false);
+      setIsLoading(false);
       handleModalClose();
     } catch (e) {
       console.log(e);
       setRemovingError(true);
-      setIsSubmitting(false);
+      setIsLoading(false);
     }
   };
 
   return (
     <>
-      <h5 className="mb-2">Are you sure to remove channel and all its messages?</h5>
+      <p className="mb-3">Are you sure to remove channel and all its messages?</p>
       {removingError
-      && <Feedback className="d-block invalid-feedback">Sorry, something went wrong. Try again later</Feedback>}
-      <hr />
+      && <Feedback className="d-block invalid-feedback mb-2">Sorry, something went wrong. Try again later</Feedback>}
       <ButtonGroup className="d-flex justify-content-between mt-2">
         <Button
           variant="secondary"
-          className="mr-2 flex-grow-0"
+          className="mr-2 flex-grow-0 border-radius"
+          disabled={isLoading}
           onClick={handleModalClose}
         >
           Cancel
         </Button>
         <Button
           variant="danger"
-          className="flex-grow-0"
-          disabled={isSubmitting}
+          className="flex-grow-0 border-radius"
+          disabled={isLoading}
           onClick={handleChannelRemove}
         >
           Submit

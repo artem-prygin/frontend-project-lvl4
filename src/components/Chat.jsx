@@ -24,7 +24,12 @@ const Chat = () => {
   return (
     <div id="chat-box" className="chat-messages overflow-auto mb-3">
       {!messages.length && <div className="text-muted">This chat is empty for now. Write your first message!</div>}
-      {messages.map((message) => <ChatMessage message={message} key={message.id} />)}
+      {messages.map((message) => (
+        <ChatMessage
+          message={message}
+          key={message.id}
+        />
+      ))}
     </div>
   );
 };

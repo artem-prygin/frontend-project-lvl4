@@ -1,7 +1,7 @@
 export const MODAL_TYPE = {
-  add: 'add',
-  rename: 'rename',
-  remove: 'remove',
+  ADD: 'add',
+  RENAME: 'rename',
+  REMOVE: 'remove',
 };
 
 export const NETWORK_ERROR = 'Network error';
