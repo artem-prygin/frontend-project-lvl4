@@ -47,9 +47,7 @@ export const channelsSlice = createSlice({
   reducers: {
     addChannel: (state, action) => {
       const newChannel = action.payload;
-      const newChannelId = newChannel.id;
-      state.channels.push(action.payload);
-      state.currentChannelId = newChannelId;
+      state.channels.push(newChannel);
     },
     removeChannel: (state, action) => {
       const channelId = action.payload;
