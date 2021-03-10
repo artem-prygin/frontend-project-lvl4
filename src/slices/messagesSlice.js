@@ -20,7 +20,7 @@ export const fetchAllMessagesAsync = createAsyncThunk(
     const route = routes.messagesPath();
     const response = await axios.get(route);
     const messages = response.data.data.map((message) => message.attributes);
-    return messages;
+    return { messages };
   },
 );
 

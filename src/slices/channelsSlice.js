@@ -34,7 +34,7 @@ export const fetchAllChannelsAsync = createAsyncThunk(
     const route = routes.channelsPath();
     const response = await axios.get(route);
     const channels = response.data.data.map((channel) => channel.attributes);
-    return channels;
+    return { channels };
   },
 );
 
