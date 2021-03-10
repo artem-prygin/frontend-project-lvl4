@@ -25,7 +25,9 @@ export default (gon, socket) => {
       channels: gon.channels,
       currentChannelId: gon.currentChannelId,
     },
-    messages: gon.messages,
+    messages: {
+      list: gon.messages,
+    },
   };
   const store = configureStore({
     reducer,
@@ -48,6 +50,10 @@ export default (gon, socket) => {
     .on('renameChannel', (data) => {
       const { data: { attributes: renamedChannel } } = data;
       store.dispatch(renameChannel(renamedChannel));
+    })
+    .on('connect', async () => {
+      store.dispatch(fetchAllChannelsAsync());
+      store.dispatch(fetchAllMessagesAsync());
     })
     .on('reconnect', async () => {
       store.dispatch(fetchAllChannelsAsync());

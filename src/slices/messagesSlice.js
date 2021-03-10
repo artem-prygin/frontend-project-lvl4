@@ -26,27 +26,29 @@ export const fetchAllMessagesAsync = createAsyncThunk(
 
 export const messagesSlice = createSlice({
   name: 'messages',
-  initialState: [],
+  initialState: {
+    list: [],
+  },
   reducers: {
     addMessage: (state, action) => {
       const newMessage = action.payload;
-      state.push(newMessage);
+      state.list.push(newMessage);
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(removeChannel, (state, action) => {
         const channelId = action.payload;
-        remove(state, (message) => message.channelId === channelId);
+        remove(state.list, (message) => message.channelId === channelId);
       })
       .addCase(fetchAllMessagesAsync.fulfilled, (state, action) => {
         const { messages } = action.payload;
-        state = messages;
+        state.list = messages;
       });
   },
 });
 
 export const { addMessage, storeMessages } = messagesSlice.actions;
-export const messagesSelector = (state) => state.messages
+export const messagesSelector = (state) => state.messages.list
   .filter((msg) => msg.channelId === state.channelsData.currentChannelId);
 export default messagesSlice.reducer;
