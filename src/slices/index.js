@@ -4,6 +4,6 @@ import modalReducer from './modalSlice';
 
 export default {
   channelsData: channelsReducer,
-  messages: messagesReducer,
+  messagesData: messagesReducer,
   modal: modalReducer,
 };

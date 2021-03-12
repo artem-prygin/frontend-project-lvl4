@@ -13,7 +13,6 @@ const ModalRemoveChannel = ({ handleQuery, handleModalClose, id }) => {
       setIsLoading(true);
       const result = await handleQuery(id);
       unwrapResult(result);
-      setRemovingError(false);
       setIsLoading(false);
       handleModalClose();
     } catch (e) {
@@ -27,7 +26,7 @@ const ModalRemoveChannel = ({ handleQuery, handleModalClose, id }) => {
     <>
       <p className="mb-3">Are you sure to remove channel and all its messages?</p>
       {removingError
-      && <Feedback className="d-block invalid-feedback mb-2">Sorry, something went wrong. Try again later</Feedback>}
+        && <Feedback className="d-block invalid-feedback mb-2">Sorry, something went wrong. Try again later</Feedback>}
       <ButtonGroup className="d-flex justify-content-between mt-2">
         <Button
           variant="secondary"

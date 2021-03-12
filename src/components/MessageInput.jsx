@@ -14,18 +14,19 @@ import { useFormik } from 'formik';
 import cn from 'classnames';
 import Context from '../Context';
 import { NETWORK_ERROR } from '../constants';
-import { postMessageAsync } from '../slices/messagesSlice';
-import { currentChannelIdSelector } from '../slices/channelsSlice';
+import { createMessageAsync } from '../slices/messagesSlice';
+import { getCurrentChannelId } from '../slices/channelsSlice';
 
 const MESSAGE_MAX_LENGTH = 400;
-const validationSchema = yup.object()
+const validateForm = yup.object()
   .shape({
     message: yup.string()
       .required('')
+      .trim()
       .max(MESSAGE_MAX_LENGTH, `Maximum ${MESSAGE_MAX_LENGTH} symbols`),
   });
 
-const onSubmit = (
+const handleSubmit = (
   dispatch,
   username,
   currentChannelId,
@@ -36,7 +37,7 @@ const onSubmit = (
   const body = DOMPurify.sanitize(message);
   try {
     const payload = { currentChannelId, body, username };
-    const result = await dispatch(postMessageAsync(payload));
+    const result = await dispatch(createMessageAsync(payload));
     setSubmitting(false);
     unwrapResult(result);
     resetForm();
@@ -48,20 +49,20 @@ const onSubmit = (
   }
 };
 
-const MessageInput = () => {
+const MessageInput = ({ channel }) => {
   const dispatch = useDispatch();
   const { username } = useContext(Context);
-  const currentChannelId = useSelector(currentChannelIdSelector);
+  const currentChannelId = useSelector(getCurrentChannelId);
   const messageInput = useRef(null);
 
   useEffect(() => {
     messageInput?.current?.focus();
-  }, [currentChannelId]);
+  }, [channel]);
 
   const formik = useFormik({
     initialValues: { message: '' },
-    validationSchema,
-    onSubmit: onSubmit(dispatch, username, currentChannelId, messageInput),
+    validationSchema: validateForm,
+    onSubmit: handleSubmit(dispatch, username, currentChannelId, messageInput),
   });
 
   return (

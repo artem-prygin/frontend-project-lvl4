@@ -2,8 +2,8 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'react-bootstrap';
 import {
-  channelsSelector,
-  currentChannelIdSelector,
+  getChannels,
+  getCurrentChannelId,
   setCurrentChannelId,
 } from '../slices/channelsSlice';
 import { openModal } from '../slices/modalSlice';
@@ -11,12 +11,12 @@ import { MODAL_TYPE } from '../constants';
 import ChannelItem from './ChannelItem';
 
 const Channels = () => {
-  const channels = useSelector(channelsSelector);
+  const channels = useSelector(getChannels);
   const dispatch = useDispatch();
-  const currentChannelId = useSelector(currentChannelIdSelector);
+  const currentChannelId = useSelector(getCurrentChannelId);
 
-  const handleSetCurrentChannelId = (id) => () => {
-    dispatch(setCurrentChannelId(id));
+  const handleSetCurrentChannelId = (channelId) => () => {
+    dispatch(setCurrentChannelId({ channelId }));
   };
 
   const handleOpenModal = (modalType, channelId = null) => () => {
@@ -40,7 +40,7 @@ const Channels = () => {
           <ChannelItem
             handleOpenModal={handleOpenModal}
             handleSetCurrentChannelId={handleSetCurrentChannelId}
-            currentChannelId={currentChannelId}
+            isCurrentChannel={currentChannelId === channel.id}
             channel={channel}
             key={channel.id}
           />

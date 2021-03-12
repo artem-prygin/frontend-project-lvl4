@@ -5,17 +5,22 @@ import axios from 'axios';
 import { removeChannel } from './channelsSlice';
 import routes from '../routes';
 
-export const postMessageAsync = createAsyncThunk(
-  'messages/addMessageAsync',
-  async (payload) => {
-    const { currentChannelId, body, username } = payload;
+export const getMessages = (state) => state.messagesData.messages
+  .filter((msg) => {
+    const { currentChannelId } = state.channelsData;
+    return msg.channelId === currentChannelId;
+  });
+
+export const createMessageAsync = createAsyncThunk(
+  'messages/createMessageAsync',
+  async ({ currentChannelId, body, username }) => {
     const route = routes.channelMessagesPath(currentChannelId);
     await axios.post(route, { data: { attributes: { body, username } } });
   },
 );
 
 export const fetchAllMessagesAsync = createAsyncThunk(
-  'messages/storeMessagesAsync',
+  'messages/fetchAllMessagesAsync',
   async () => {
     const route = routes.messagesPath();
     const response = await axios.get(route);
@@ -27,28 +32,27 @@ export const fetchAllMessagesAsync = createAsyncThunk(
 export const messagesSlice = createSlice({
   name: 'messages',
   initialState: {
-    list: [],
+    messages: [],
   },
   reducers: {
     addMessage: (state, action) => {
-      const newMessage = action.payload;
-      state.list.push(newMessage);
+      const { newMessage } = action.payload;
+      state.messages.push(newMessage);
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(removeChannel, (state, action) => {
         const channelId = action.payload;
-        remove(state.list, (message) => message.channelId === channelId);
+        remove(state.messages, (message) => message.channelId === channelId);
       })
       .addCase(fetchAllMessagesAsync.fulfilled, (state, action) => {
         const { messages } = action.payload;
-        state.list = messages;
+        state.messages = messages;
       });
   },
 });
 
 export const { addMessage, storeMessages } = messagesSlice.actions;
-export const messagesSelector = (state) => state.messages.list
-  .filter((msg) => msg.channelId === state.channelsData.currentChannelId);
+
 export default messagesSlice.reducer;

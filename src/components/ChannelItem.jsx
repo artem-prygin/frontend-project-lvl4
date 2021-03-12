@@ -3,12 +3,12 @@ import { Button, ButtonGroup, Dropdown } from 'react-bootstrap';
 import { MODAL_TYPE } from '../constants';
 
 const DefaultChannelItem = ({ channel, handleSetCurrentChannelId, btnVariant }) => {
-  const { name, id } = channel;
+  const { name, id: channelId } = channel;
   return (
     <Button
       variant={btnVariant}
       className="nav-link btn-block flex-grow-1 text-left"
-      onClick={handleSetCurrentChannelId(id)}
+      onClick={handleSetCurrentChannelId(channelId)}
     >
       {name}
     </Button>
@@ -46,9 +46,9 @@ const ChannelItem = ({
   handleOpenModal,
   handleSetCurrentChannelId,
   channel,
-  currentChannelId,
+  isCurrentChannel,
 }) => {
-  const btnVariant = channel.id === currentChannelId ? 'primary' : 'light';
+  const btnVariant = isCurrentChannel ? 'primary' : 'light';
 
   return (
     <li className="nav-item mb-2 mr-1">

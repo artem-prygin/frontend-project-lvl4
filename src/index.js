@@ -6,14 +6,15 @@ import 'regenerator-runtime/runtime';
 import io from 'socket.io-client';
 import gon from 'gon';
 import '../assets/application.scss';
-import runApp from './app.jsx';
+import initApp from './app.jsx';
 
 if (process.env.NODE_ENV !== 'production') {
   localStorage.debug = 'chat:*';
 }
 
-const socket = io(window.location.href);
-const app = runApp(gon, socket);
+const url = window.location.href;
+const socket = io(url);
+const app = initApp(gon, socket);
 const container = document.getElementById('chat');
 
 ReactDOM.render(app, container);

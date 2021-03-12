@@ -12,25 +12,22 @@ import DOMPurify from 'dompurify';
 import * as yup from 'yup';
 import cn from 'classnames';
 import { useFormik } from 'formik';
-import {
-  channelNamesSelector,
-  channelsSelector,
-  currentChannelNameByIdSelector,
-} from '../slices/channelsSlice';
+import { getChannelNames, getCurrentChannel } from '../slices/channelsSlice';
 import { NETWORK_ERROR } from '../constants';
 
 const MIN_LENGTH = 3;
 const MAX_LENGTH = 30;
-const validationSchema = (currentChannelName, channelNames) => yup.object()
+const validateForm = (currentChannelName, channelNames) => yup.object()
   .shape({
     channelName: yup.string()
       .required('')
+      .trim()
       .min(MIN_LENGTH, `Name should be between ${MIN_LENGTH} and ${MAX_LENGTH} symbols`)
       .max(MAX_LENGTH, `Name should be between ${MIN_LENGTH} and ${MAX_LENGTH} symbols`)
       .notOneOf(channelNames, 'This name is already taken'),
   });
 
-const onSubmit = (
+const handleSubmit = (
   handleQuery,
   handleModalClose,
   id,
@@ -56,19 +53,19 @@ const onSubmit = (
 };
 
 const ModalEditChannel = ({ handleQuery, handleModalClose, id }) => {
-  const channels = useSelector(channelsSelector);
-  const currentChannelName = useSelector(currentChannelNameByIdSelector(id));
-  const channelNames = useSelector(channelNamesSelector);
+  const currentChannel = useSelector(getCurrentChannel(id));
+  const currentChannelName = currentChannel?.name || '';
+  const channelNames = useSelector(getChannelNames);
   const channelInput = useRef(null);
 
   useEffect(() => {
     channelInput?.current?.select();
-  }, [channels]);
+  }, []);
 
   const formik = useFormik({
     initialValues: { channelName: currentChannelName },
-    validationSchema: validationSchema(currentChannelName, channelNames),
-    onSubmit: onSubmit(handleQuery, handleModalClose, id, channelInput),
+    validationSchema: validateForm(currentChannelName, channelNames),
+    onSubmit: handleSubmit(handleQuery, handleModalClose, id, channelInput),
   });
 
   return (
