@@ -56,8 +56,6 @@ export default (preloadedData, socket) => {
     })
     .on('reconnect_attempt', async () => {
       console.log('reconnect_attempt');
-      store.dispatch(fetchAllChannelsAsync());
-      store.dispatch(fetchAllMessagesAsync());
     })
     .on('reconnect', async () => {
       console.log('reconnect');
