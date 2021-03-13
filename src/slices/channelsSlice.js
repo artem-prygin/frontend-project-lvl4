@@ -78,6 +78,7 @@ export const channelsSlice = createSlice({
     builder
       .addCase(fetchAllChannelsAsync.fulfilled, (state, action) => {
         const { channels } = action.payload;
+        console.log(action.payload);
         state.channels = channels;
         if (!channels.some((channel) => channel.id === state.currentChannelId)) {
           const defaultChannelId = first(state.channels)?.id;

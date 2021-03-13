@@ -54,7 +54,13 @@ export default (preloadedData, socket) => {
       const { data: { attributes: renamedChannel } } = data;
       store.dispatch(renameChannel({ renamedChannel }));
     })
+    .on('connect', async () => {
+      console.log('connect');
+      store.dispatch(fetchAllChannelsAsync());
+      store.dispatch(fetchAllMessagesAsync());
+    })
     .on('reconnect', async () => {
+      console.log('reconnect');
       store.dispatch(fetchAllChannelsAsync());
       store.dispatch(fetchAllMessagesAsync());
     });
