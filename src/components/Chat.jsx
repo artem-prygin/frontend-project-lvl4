@@ -19,7 +19,7 @@ const Chat = () => {
 
   useEffect(() => {
     animateScroll.scrollToBottom({
-      duration: 300,
+      duration: 0,
       containerId: 'chat-box',
     });
   }, [messages]);
