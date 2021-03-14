@@ -17,7 +17,7 @@ import { NETWORK_ERROR } from '../constants';
 
 const MIN_LENGTH = 3;
 const MAX_LENGTH = 30;
-const getValidationSchema = (currentChannelName, channelNames) => yup.object()
+const getValidationSchema = (channelNames) => yup.object()
   .shape({
     channelName: yup
       .string()
@@ -65,7 +65,7 @@ const ModalEditChannel = ({ handleQuery, handleModalClose, id }) => {
 
   const formik = useFormik({
     initialValues: { channelName: currentChannelName },
-    validationSchema: getValidationSchema(currentChannelName, channelNames),
+    validationSchema: getValidationSchema(channelNames),
     onSubmit: handleSubmit(handleQuery, handleModalClose, id, channelInput),
   });
 
