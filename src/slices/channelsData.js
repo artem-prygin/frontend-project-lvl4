@@ -6,7 +6,12 @@ import routes from '../routes';
 
 export const getChannels = (state) => state.channelsData.channels;
 export const getCurrentChannelId = (state) => state.channelsData.currentChannelId;
-export const getCurrentChannel = (id) => (state) => state.channelsData.channels
+export const getCurrentChannel = (state) => {
+  const { currentChannelId } = state.channelsData;
+  return state.channelsData.channels
+    .find((channel) => channel.id === currentChannelId);
+};
+export const getChannelById = (id) => (state) => state.channelsData.channels
   .find((channel) => channel.id === id);
 export const getChannelNames = (state) => state.channelsData.channels
   .map((channel) => channel.name);
@@ -78,7 +83,6 @@ export const channelsSlice = createSlice({
     builder
       .addCase(fetchAllChannelsAsync.fulfilled, (state, action) => {
         const { channels } = action.payload;
-        console.log(action.payload);
         state.channels = channels;
         if (!channels.some((channel) => channel.id === state.currentChannelId)) {
           const defaultChannelId = first(state.channels)?.id;

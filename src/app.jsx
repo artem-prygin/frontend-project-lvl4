@@ -7,13 +7,13 @@ import { first } from 'lodash';
 import reducer from './slices';
 import App from './components/App';
 import Context from './Context';
-import { addMessage, fetchAllMessagesAsync } from './slices/messagesSlice';
+import { addMessage, fetchAllMessagesAsync } from './slices/messagesData';
 import {
   addChannel,
   removeChannel,
   renameChannel,
   fetchAllChannelsAsync,
-} from './slices/channelsSlice';
+} from './slices/channelsData';
 
 export default (preloadedData, socket) => {
   if (!cookies.get('username')) {
@@ -54,16 +54,7 @@ export default (preloadedData, socket) => {
       const { data: { attributes: renamedChannel } } = data;
       store.dispatch(renameChannel({ renamedChannel }));
     })
-    .on('reconnect_attempt', async () => {
-      console.log('reconnect_attempt');
-    })
-    .on('reconnect', async () => {
-      console.log('reconnect');
-      store.dispatch(fetchAllChannelsAsync());
-      store.dispatch(fetchAllMessagesAsync());
-    })
-    .on('connect', async () => {
-      console.log('connect');
+    .on('connect', () => {
       store.dispatch(fetchAllChannelsAsync());
       store.dispatch(fetchAllMessagesAsync());
     });

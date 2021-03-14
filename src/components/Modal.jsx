@@ -4,8 +4,8 @@ import { Modal as BootstrapModal } from 'react-bootstrap';
 import ModalEditChannel from './ModalEditChannel';
 import ModalRemoveChannel from './ModalRemoveChannel';
 import { MODAL_TYPE } from '../constants';
-import { createChannelAsync, removeChannelAsync, renameChannelAsync } from '../slices/channelsSlice';
-import { closeModal, getModal } from '../slices/modalSlice';
+import { createChannelAsync, removeChannelAsync, renameChannelAsync } from '../slices/channelsData';
+import { closeModal, getModal } from '../slices/modal';
 
 const modalMapping = (dispatch) => ({
   [MODAL_TYPE.ADD]: {

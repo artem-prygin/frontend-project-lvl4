@@ -1,6 +1,6 @@
-import channelsReducer from './channelsSlice';
-import messagesReducer from './messagesSlice';
-import modalReducer from './modalSlice';
+import channelsReducer from './channelsData';
+import messagesReducer from './messagesData';
+import modalReducer from './modal';
 
 export default {
   channelsData: channelsReducer,

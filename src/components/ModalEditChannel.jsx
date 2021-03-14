@@ -12,15 +12,16 @@ import DOMPurify from 'dompurify';
 import * as yup from 'yup';
 import cn from 'classnames';
 import { useFormik } from 'formik';
-import { getChannelNames, getCurrentChannel } from '../slices/channelsSlice';
+import { getChannelNames, getChannelById } from '../slices/channelsData';
 import { NETWORK_ERROR } from '../constants';
 
 const MIN_LENGTH = 3;
 const MAX_LENGTH = 30;
-const validateForm = (currentChannelName, channelNames) => yup.object()
+const getValidationSchema = (currentChannelName, channelNames) => yup.object()
   .shape({
-    channelName: yup.string()
-      .required('')
+    channelName: yup
+      .string()
+      .required('This field is required')
       .trim()
       .min(MIN_LENGTH, `Name should be between ${MIN_LENGTH} and ${MAX_LENGTH} symbols`)
       .max(MAX_LENGTH, `Name should be between ${MIN_LENGTH} and ${MAX_LENGTH} symbols`)
@@ -53,7 +54,7 @@ const handleSubmit = (
 };
 
 const ModalEditChannel = ({ handleQuery, handleModalClose, id }) => {
-  const currentChannel = useSelector(getCurrentChannel(id));
+  const currentChannel = useSelector(getChannelById(id));
   const currentChannelName = currentChannel?.name || '';
   const channelNames = useSelector(getChannelNames);
   const channelInput = useRef(null);
@@ -64,7 +65,7 @@ const ModalEditChannel = ({ handleQuery, handleModalClose, id }) => {
 
   const formik = useFormik({
     initialValues: { channelName: currentChannelName },
-    validationSchema: validateForm(currentChannelName, channelNames),
+    validationSchema: getValidationSchema(currentChannelName, channelNames),
     onSubmit: handleSubmit(handleQuery, handleModalClose, id, channelInput),
   });
 
@@ -89,7 +90,7 @@ const ModalEditChannel = ({ handleQuery, handleModalClose, id }) => {
           />
           {formik.errors.channelName && (
             <Feedback
-              className={cn('d-block position-absolute feedback', {
+              className={cn('d-block position-absolute feedback w-100 mt-1 small', {
                 'text-muted': !formik.isValid && formik.errors.channelName !== NETWORK_ERROR,
                 'invalid-feedback': !formik.isValid && formik.errors.channelName === NETWORK_ERROR,
               })}

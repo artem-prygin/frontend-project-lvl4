@@ -2,14 +2,15 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { remove } from 'lodash';
 import axios from 'axios';
-import { removeChannel } from './channelsSlice';
+import { removeChannel } from './channelsData';
 import routes from '../routes';
 
-export const getMessages = (state) => state.messagesData.messages
-  .filter((msg) => {
-    const { currentChannelId } = state.channelsData;
-    return msg.channelId === currentChannelId;
-  });
+export const getMessages = (state) => {
+  const { currentChannelId } = state.channelsData;
+  const messages = state.messagesData.messages
+    .filter((msg) => msg.channelId === currentChannelId);
+  return messages;
+};
 
 export const createMessageAsync = createAsyncThunk(
   'messages/createMessageAsync',
@@ -30,7 +31,7 @@ export const fetchAllMessagesAsync = createAsyncThunk(
 );
 
 export const messagesSlice = createSlice({
-  name: 'messages',
+  name: 'messagesData',
   initialState: {
     messages: [],
   },

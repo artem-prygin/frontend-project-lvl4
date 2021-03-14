@@ -1,20 +1,7 @@
 @import '~bootstrap/scss/bootstrap';
 
-.outline-none, .outline-none:focus {
-  outline: none;
-  box-shadow: none;
-}
-
 .feedback {
   bottom: -25px;
-  left: 0;
-  width: 100%;
-  margin-top: 0.25rem;
-  font-size: 80%;
-}
-
-.border-radius {
-  border-radius: 0.25rem!important;
 }
 
 @media screen and (min-width: 768px) {
@@ -27,9 +14,5 @@
 @media screen and (max-width: 767px) {
   .main-container {
     overflow: visible!important;
-  }
-
-  .channels-container {
-    margin-bottom: 10px;
   }
 }

@@ -5,8 +5,8 @@ import {
   getChannels,
   getCurrentChannelId,
   setCurrentChannelId,
-} from '../slices/channelsSlice';
-import { openModal } from '../slices/modalSlice';
+} from '../slices/channelsData';
+import { openModal } from '../slices/modal';
 import { MODAL_TYPE } from '../constants';
 import ChannelItem from './ChannelItem';
 
@@ -24,12 +24,12 @@ const Channels = () => {
   };
 
   return (
-    <div className="col-12 border-right channels-container col-md-3">
-      <div className="d-flex mb-2">
+    <div className="col-12 border-right col-md-3 mb-1 mb-md-0 channels-container">
+      <div className="d-flex mb-2 p-1">
         <span>Channels</span>
         <Button
           variant="link"
-          className="ml-auto p-0 text-decoration-none outline-none"
+          className="ml-auto p-0 text-decoration-none"
           onClick={handleOpenModal(MODAL_TYPE.ADD)}
         >
           +

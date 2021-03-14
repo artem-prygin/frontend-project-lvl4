@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
 import {
   Form,
@@ -14,13 +14,13 @@ import { useFormik } from 'formik';
 import cn from 'classnames';
 import Context from '../Context';
 import { NETWORK_ERROR } from '../constants';
-import { createMessageAsync } from '../slices/messagesSlice';
-import { getCurrentChannelId } from '../slices/channelsSlice';
+import { createMessageAsync } from '../slices/messagesData';
 
 const MESSAGE_MAX_LENGTH = 400;
-const validateForm = yup.object()
+const getValidationSchema = yup.object()
   .shape({
-    message: yup.string()
+    message: yup
+      .string()
       .required('')
       .trim()
       .max(MESSAGE_MAX_LENGTH, `Maximum ${MESSAGE_MAX_LENGTH} symbols`),
@@ -52,7 +52,7 @@ const handleSubmit = (
 const MessageInput = ({ channel }) => {
   const dispatch = useDispatch();
   const { username } = useContext(Context);
-  const currentChannelId = useSelector(getCurrentChannelId);
+  const currentChannelId = channel.id;
   const messageInput = useRef(null);
 
   useEffect(() => {
@@ -61,7 +61,7 @@ const MessageInput = ({ channel }) => {
 
   const formik = useFormik({
     initialValues: { message: '' },
-    validationSchema: validateForm,
+    validationSchema: getValidationSchema,
     onSubmit: handleSubmit(dispatch, username, currentChannelId, messageInput),
   });
 
@@ -92,7 +92,7 @@ const MessageInput = ({ channel }) => {
         </Button>
         {formik.errors.message && (
           <Feedback
-            className={cn('d-block position-absolute feedback invalid-feedback', {
+            className={cn('d-block position-absolute feedback w-100 mt-1 start-0 small', {
               'text-muted': !formik.isValid && formik.errors.message !== NETWORK_ERROR,
               'invalid-feedback': !formik.isValid && formik.errors.message === NETWORK_ERROR,
             })}
