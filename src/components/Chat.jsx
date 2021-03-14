@@ -25,7 +25,7 @@ const Chat = () => {
   }, [messages]);
 
   return (
-    <div className="col-12 col-md">
+    <div className="col-12 h-100 col-md">
       <div className="d-flex flex-column h-100">
         <div id="chat-box" className="chat-messages overflow-auto mb-3">
           {!messages.length && <div className="text-muted">This chat is empty for now. Write your first message!</div>}
