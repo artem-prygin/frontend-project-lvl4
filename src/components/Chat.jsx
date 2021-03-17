@@ -22,7 +22,7 @@ const Chat = () => {
       duration: 0,
       containerId: 'chat-box',
     });
-  }, [messages]);
+  }, [messages.length]);
 
   return (
     <div className="col-12 h-100 col-md">

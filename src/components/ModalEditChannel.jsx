@@ -8,7 +8,6 @@ import {
 import Feedback from 'react-bootstrap/Feedback';
 import { useSelector } from 'react-redux';
 import { unwrapResult } from '@reduxjs/toolkit';
-import DOMPurify from 'dompurify';
 import * as yup from 'yup';
 import cn from 'classnames';
 import { useFormik } from 'formik';
@@ -36,12 +35,11 @@ const handleSubmit = (
 ) => async (values, handlers) => {
   const { setSubmitting, setFieldError } = handlers;
   const { channelName } = values;
-  const sanitizedChannelName = DOMPurify
-    .sanitize(channelName)
+  const trimmedChannelName = channelName
     .trim()
     .replace(/\s+/g, ' ');
   try {
-    const result = await handleQuery(sanitizedChannelName, id);
+    const result = await handleQuery(trimmedChannelName, id);
     unwrapResult(result);
     setSubmitting(false);
     handleModalClose();

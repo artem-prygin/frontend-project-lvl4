@@ -3,7 +3,6 @@ import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import faker from 'faker';
 import cookies from 'js-cookie';
-import { first } from 'lodash';
 import reducer from './slices';
 import App from './components/App';
 import Context from './Context';
@@ -20,8 +19,7 @@ export default (preloadedData, socket) => {
     cookies.set('username', faker.name.findName());
   }
   const username = cookies.get('username');
-  const { channels, messages } = preloadedData;
-  const currentChannelId = first(channels)?.id;
+  const { channels, messages, currentChannelId } = preloadedData;
 
   const preloadedState = {
     channelsData: {

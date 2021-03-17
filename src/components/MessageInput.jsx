@@ -8,7 +8,6 @@ import {
   FormGroup,
 } from 'react-bootstrap';
 import Feedback from 'react-bootstrap/Feedback';
-import DOMPurify from 'dompurify';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import cn from 'classnames';
@@ -33,8 +32,7 @@ const handleSubmit = (
   messageInput,
 ) => async (values, handlers) => {
   const { resetForm, setSubmitting, setFieldError } = handlers;
-  const { message } = values;
-  const body = DOMPurify.sanitize(message);
+  const { message: body } = values;
   try {
     const payload = { currentChannelId, body, username };
     const result = await dispatch(createMessageAsync(payload));
